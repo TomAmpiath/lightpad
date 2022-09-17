@@ -21,13 +21,30 @@
 #  SOFTWARE.
 #
 
-import json
-import os
-from typing import Dict
+from PySide6.QtGui import QAction
+from PySide6.QtWidgets import QMenu, QMenuBar
 
-__version__: str = '0.1'
 
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
+class MenuBar(QMenuBar):
+    """Menu bar of the application"""
 
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = json.load(meta_file)
+    def __init__(self) -> None:
+        super().__init__(parent=None)
+
+        self.setNativeMenuBar(False)
+
+        self.file_menu: QMenu = self.addMenu('File')
+        self.open_file_action: QAction = QAction('Open File', self)
+        self.open_dir_action: QAction = QAction('Open Dir', self)
+        self.save_file_action: QAction = QAction('Save File', self)
+        self.exit_action: QAction = QAction('Exit', self)
+        self.file_menu.addAction(self.open_file_action)
+        self.file_menu.addAction(self.open_dir_action)
+        self.file_menu.addAction(self.save_file_action)
+        self.file_menu.addAction(self.exit_action)
+
+        self.edit_menu: QMenu = self.addMenu('Edit')
+        self.view_menu: QMenu = self.addMenu('View')
+        self.tools_menu: QMenu = self.addMenu('Tools')
+        self.windows_menu: QMenu = self.addMenu('Windows')
+        self.help_menu: QMenu = self.addMenu('Help')

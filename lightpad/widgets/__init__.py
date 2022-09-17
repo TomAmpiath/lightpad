@@ -20,14 +20,3 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-
-import json
-import os
-from typing import Dict
-
-__version__: str = '0.1'
-
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
-
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = json.load(meta_file)

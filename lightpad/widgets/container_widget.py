@@ -21,13 +21,27 @@
 #  SOFTWARE.
 #
 
-import json
-import os
-from typing import Dict
+from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
 
-__version__: str = '0.1'
+from lightpad.utils.commons import init_layout
+from lightpad.widgets.editor_screen import EditorScreen
+from lightpad.widgets.welcome_screen import WelcomeScreen
 
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
 
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = json.load(meta_file)
+class ContainerWidget(QWidget):
+    """Main Central widget of the application"""
+
+    def __init__(self) -> None:
+        super().__init__()
+
+        init_layout(self, QVBoxLayout)
+        self.stacked_container: QStackedWidget = QStackedWidget()
+        self.layout().addWidget(self.stacked_container)
+
+        self.welcome_screen: WelcomeScreen = WelcomeScreen()
+        self.editor_screen: EditorScreen = EditorScreen()
+
+        self.stacked_container.addWidget(self.welcome_screen)
+        self.stacked_container.addWidget(self.editor_screen)
+
+        self.stacked_container.setCurrentWidget(self.welcome_screen)

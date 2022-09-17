@@ -21,13 +21,26 @@
 #  SOFTWARE.
 #
 
-import json
-import os
-from typing import Dict
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout
 
-__version__: str = '0.1'
+from lightpad import meta
+from lightpad.utils.commons import init_layout
 
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
 
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = json.load(meta_file)
+class WelcomeScreen(QFrame):
+    """This is the screen shown when the app is opened"""
+
+    def __init__(self) -> None:
+        super().__init__()
+
+        init_layout(self, QVBoxLayout, layout_spacing=8)
+
+        self.setStyleSheet('background: white; color: black;')
+
+        self.layout().addWidget(QLabel('Welcome'), alignment=Qt.AlignCenter)
+        self.layout().addWidget(QLabel(f'{meta["name"]} - version {meta["version"]}'), alignment=Qt.AlignCenter)
+        self.layout().addWidget(QLabel(f'{meta["description"]}'), alignment=Qt.AlignCenter)
+        self.layout().addStretch()
+
+        self.layout().itemAt(0).widget().setStyleSheet('font-size: 96px;')

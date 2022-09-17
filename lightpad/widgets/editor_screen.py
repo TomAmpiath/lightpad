@@ -21,13 +21,36 @@
 #  SOFTWARE.
 #
 
-import json
-import os
-from typing import Dict
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QTextEdit
 
-__version__: str = '0.1'
+from lightpad.utils.commons import init_layout
 
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
 
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = json.load(meta_file)
+class EditorScreen(QFrame):
+    """This screen contains the text editor and other assistance widges."""
+
+    def __init__(self):
+        super().__init__()
+
+        self.setStyleSheet('background: white; color: black;')
+
+        init_layout(self, QHBoxLayout)
+
+        self.text_edit: QTextEdit = QTextEdit()
+
+        self.layout().addWidget(self.text_edit)
+
+    def open_file(self, file_path: str) -> None:
+        """Open file for editing.
+
+        Parameters
+        ----------
+        file_path: str
+            The path to file to be opened.
+
+        Returns
+        -------
+        None
+        """
+        with open(file_path, 'r') as f:
+            self.text_edit.setText(f.read())
