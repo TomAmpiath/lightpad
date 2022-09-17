@@ -1,0 +1,86 @@
+#  MIT License
+#
+#  Copyright (c) 2022 Tom George Ampiath
+#
+#  Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+#  in the Software without restriction, including without limitation the rights
+#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#  copies of the Software, and to permit persons to whom the Software is
+#  furnished to do so, subject to the following conditions:
+#
+#  The above copyright notice and this permission notice shall be included in all
+#  copies or substantial portions of the Software.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#  SOFTWARE.
+#
+
+import os
+import sys
+from typing import List, Optional
+
+from PySide6.QtGui import QFont, QFontDatabase
+from PySide6.QtWidgets import QApplication, QFileDialog
+
+from lightpad import base_dir
+from lightpad.widgets.main_window import MainWindow
+
+
+class Application(QApplication):
+
+    pwd: str = os.path.expanduser('~')
+    current_file: Optional[str] = None
+    opened_files: List[str] = []
+    open_files: List[str] = []
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        font_id: int = QFontDatabase.addApplicationFont(
+            os.path.join(base_dir, os.path.pardir, 'fonts', 'CascadiaMono.ttf')
+        )
+        font_family: str = QFontDatabase.applicationFontFamilies(font_id)[0]
+        font: QFont = QFont(font_family)
+
+        self.setFont(font)
+
+        self.main_window: MainWindow = MainWindow()
+        self.main_window.show()
+
+        self.init_connections()
+
+    def init_connections(self) -> None:
+        """Initializes widget connections"""
+        self.main_window.menu_bar.open_file_action.triggered.connect(self.on_open_file)
+        self.main_window.menu_bar.open_dir_action.triggered.connect(self.on_open_dir)
+
+    def on_open_file(self) -> None:
+        """Actions to be performed when open file action is triggered"""
+        file_path: str = QFileDialog.getOpenFileName(self.main_window, 'Open File', self.pwd)[0]
+        self.current_file = file_path
+        self.opened_files.append(file_path)
+        self.open_files.append(file_path)
+
+        self.main_window.container_widget.stacked_container.setCurrentWidget(
+            self.main_window.container_widget.editor_screen
+        )
+
+    def on_open_dir(self) -> None:
+        """Actions to be performed when open dir action is triggered"""
+        dir_path: str = QFileDialog.getExistingDirectory(self.main_window, 'Open Directory', self.pwd)
+        self.pwd = dir_path
+
+        self.main_window.container_widget.stacked_container.setCurrentWidget(
+            self.main_window.container_widget.editor_screen
+        )
+
+
+def main() -> None:
+    app: Application = Application(sys.argv)
+    sys.exit(app.exec_())
