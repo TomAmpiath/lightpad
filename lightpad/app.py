@@ -26,9 +26,9 @@ import sys
 from typing import List, Optional
 
 from PySide6.QtGui import QFont, QFontDatabase
-from PySide6.QtWidgets import QApplication, QFileDialog
+from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 
-from lightpad import base_dir
+from lightpad import base_dir, meta
 from lightpad.widgets.main_window import MainWindow
 
 
@@ -41,6 +41,10 @@ class Application(QApplication):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+
+        self.setApplicationName(meta['name'])
+        self.setApplicationVersion(str(meta['version']))
+        self.setApplicationDisplayName(meta['name'])
 
         font_id: int = QFontDatabase.addApplicationFont(os.path.join(base_dir, os.path.pardir, 'fonts', 'CascadiaMono.ttf'))
         font_family: str = QFontDatabase.applicationFontFamilies(font_id)[0]
@@ -57,22 +61,41 @@ class Application(QApplication):
         """Initializes widget connections"""
         self.main_window.menu_bar.open_file_action.triggered.connect(self.on_open_file)
         self.main_window.menu_bar.open_dir_action.triggered.connect(self.on_open_dir)
+        self.main_window.menu_bar.save_file_action.triggered.connect(self.on_save_file)
+        self.main_window.menu_bar.exit_action.triggered.connect(self.closeAllWindows)
 
     def on_open_file(self) -> None:
         """Actions to be performed when open file action is triggered"""
         file_path: str = QFileDialog.getOpenFileName(self.main_window, 'Open File', self.pwd)[0]
-        self.current_file = file_path
-        self.opened_files.append(file_path)
-        self.open_files.append(file_path)
+        if file_path:
+            self.current_file = file_path
+            self.opened_files.append(file_path)
+            self.open_files.append(file_path)
 
-        self.main_window.container_widget.stacked_container.setCurrentWidget(self.main_window.container_widget.editor_screen)
+            self.main_window.container_widget.stacked_container.setCurrentWidget(self.main_window.container_widget.editor_screen)
+            self.main_window.container_widget.editor_screen.open_file(file_path)
 
     def on_open_dir(self) -> None:
         """Actions to be performed when open dir action is triggered"""
         dir_path: str = QFileDialog.getExistingDirectory(self.main_window, 'Open Directory', self.pwd)
-        self.pwd = dir_path
+        if dir_path:
+            self.pwd = dir_path
 
-        self.main_window.container_widget.stacked_container.setCurrentWidget(self.main_window.container_widget.editor_screen)
+            self.main_window.container_widget.stacked_container.setCurrentWidget(self.main_window.container_widget.editor_screen)
+
+    def on_save_file(self) -> None:
+        """Actions to be performed when save file action is triggered"""
+        save_file_messagebox: QMessageBox = QMessageBox()
+        save_file_messagebox.setWindowTitle('Save File')
+        save_file_messagebox.setText('The document has been modified')
+        save_file_messagebox.setInformativeText('Do you wish to save your changes?')
+        save_file_messagebox.setStandardButtons(QMessageBox.Save | QMessageBox.Cancel)
+        save_file_messagebox.setDefaultButton(QMessageBox.Save)
+        ret = save_file_messagebox.exec_()
+        if ret == QMessageBox.Save:
+            file_contents: str = self.main_window.container_widget.editor_screen.text_edit.toPlainText()
+            with open(self.current_file, 'w') as f:
+                f.write(file_contents)
 
 
 def main() -> None:

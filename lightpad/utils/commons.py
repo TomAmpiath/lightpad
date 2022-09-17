@@ -60,6 +60,10 @@ def init_layout(widget: QWidget, layout: Union[QBoxLayout, Callable], layout_spa
         The spacing to be set for the layout. (default is 0)
     contents_margins: Tuple[int, int, int, int]
         The contents margins to be set for the layout. (default is (0, 0, 0, 0))
+
+    Returns
+    -------
+    None
     """
     widget.setLayout(layout())
     widget.layout().setSpacing(layout_spacing)

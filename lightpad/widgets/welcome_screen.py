@@ -36,12 +36,7 @@ class WelcomeScreen(QFrame):
 
         init_layout(self, QVBoxLayout, layout_spacing=8)
 
-        self.setStyleSheet(
-            """
-            background: white;
-            color: black;
-            """
-        )
+        self.setStyleSheet('background: white; color: black;')
 
         self.layout().addWidget(QLabel('Welcome'), alignment=Qt.AlignCenter)
         self.layout().addWidget(QLabel(f'{meta["name"]} - version {meta["version"]}'), alignment=Qt.AlignCenter)
