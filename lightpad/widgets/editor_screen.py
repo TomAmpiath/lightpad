@@ -25,5 +25,7 @@ from PySide6.QtWidgets import QFrame
 
 
 class EditorScreen(QFrame):
+    """This screen contains the text editor and other assistance widges."""
+
     def __init__(self):
         super().__init__()

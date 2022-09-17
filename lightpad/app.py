@@ -42,9 +42,7 @@ class Application(QApplication):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        font_id: int = QFontDatabase.addApplicationFont(
-            os.path.join(base_dir, os.path.pardir, 'fonts', 'CascadiaMono.ttf')
-        )
+        font_id: int = QFontDatabase.addApplicationFont(os.path.join(base_dir, os.path.pardir, 'fonts', 'CascadiaMono.ttf'))
         font_family: str = QFontDatabase.applicationFontFamilies(font_id)[0]
         font: QFont = QFont(font_family)
 
@@ -67,18 +65,14 @@ class Application(QApplication):
         self.opened_files.append(file_path)
         self.open_files.append(file_path)
 
-        self.main_window.container_widget.stacked_container.setCurrentWidget(
-            self.main_window.container_widget.editor_screen
-        )
+        self.main_window.container_widget.stacked_container.setCurrentWidget(self.main_window.container_widget.editor_screen)
 
     def on_open_dir(self) -> None:
         """Actions to be performed when open dir action is triggered"""
         dir_path: str = QFileDialog.getExistingDirectory(self.main_window, 'Open Directory', self.pwd)
         self.pwd = dir_path
 
-        self.main_window.container_widget.stacked_container.setCurrentWidget(
-            self.main_window.container_widget.editor_screen
-        )
+        self.main_window.container_widget.stacked_container.setCurrentWidget(self.main_window.container_widget.editor_screen)
 
 
 def main() -> None:
