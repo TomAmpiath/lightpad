@@ -21,27 +21,11 @@
 #  SOFTWARE.
 #
 
-from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
-
-from lightpad.utils.commons import init_layout
-from lightpad.widgets.screens.editor_screen import EditorScreen
-from lightpad.widgets.screens.welcome_screen import WelcomeScreen
+from lightpad.widgets.editor._plain_text_editor import PlainTextEditor
 
 
-class ContainerWidget(QWidget):
-    """Main Central widget of the application"""
+class CodeEditor(PlainTextEditor):
+    """Code Editor widget"""
 
     def __init__(self) -> None:
         super().__init__()
-
-        init_layout(self, QVBoxLayout)
-        self.stacked_container: QStackedWidget = QStackedWidget()
-        self.layout().addWidget(self.stacked_container)
-
-        self.welcome_screen: WelcomeScreen = WelcomeScreen()
-        self.editor_screen: EditorScreen = EditorScreen()
-
-        self.stacked_container.addWidget(self.welcome_screen)
-        self.stacked_container.addWidget(self.editor_screen)
-
-        self.stacked_container.setCurrentWidget(self.welcome_screen)

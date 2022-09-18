@@ -21,27 +21,21 @@
 #  SOFTWARE.
 #
 
-from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
-
-from lightpad.utils.commons import init_layout
-from lightpad.widgets.screens.editor_screen import EditorScreen
-from lightpad.widgets.screens.welcome_screen import WelcomeScreen
+from PySide6.QtCore import QSize
+from PySide6.QtGui import QPaintEvent
+from PySide6.QtWidgets import QWidget
 
 
-class ContainerWidget(QWidget):
-    """Main Central widget of the application"""
+class LineNumberArea(QWidget):
+    """Area inside Plain text editor, showing line number"""
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, plain_text_editor) -> None:
+        QWidget.__init__(self, plain_text_editor)
 
-        init_layout(self, QVBoxLayout)
-        self.stacked_container: QStackedWidget = QStackedWidget()
-        self.layout().addWidget(self.stacked_container)
+        self._text_editor = plain_text_editor
 
-        self.welcome_screen: WelcomeScreen = WelcomeScreen()
-        self.editor_screen: EditorScreen = EditorScreen()
+    def sizeHint(self) -> QSize:
+        return QSize(self._text_editor.line_number_area_width)
 
-        self.stacked_container.addWidget(self.welcome_screen)
-        self.stacked_container.addWidget(self.editor_screen)
-
-        self.stacked_container.setCurrentWidget(self.welcome_screen)
+    def paintEvent(self, event: QPaintEvent) -> None:
+        self._text_editor.line_number_area_paint_event(event)

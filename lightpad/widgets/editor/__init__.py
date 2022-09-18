@@ -20,37 +20,3 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QTextEdit
-
-from lightpad.utils.commons import init_layout
-
-
-class EditorScreen(QFrame):
-    """This screen contains the text editor and other assistance widges."""
-
-    def __init__(self):
-        super().__init__()
-
-        self.setStyleSheet('background: white; color: black;')
-
-        init_layout(self, QHBoxLayout)
-
-        self.text_edit: QTextEdit = QTextEdit()
-
-        self.layout().addWidget(self.text_edit)
-
-    def open_file(self, file_path: str) -> None:
-        """Open file for editing.
-
-        Parameters
-        ----------
-        file_path: str
-            The path to file to be opened.
-
-        Returns
-        -------
-        None
-        """
-        with open(file_path, 'r') as f:
-            self.text_edit.setText(f.read())

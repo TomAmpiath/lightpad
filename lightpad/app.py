@@ -93,7 +93,7 @@ class Application(QApplication):
         save_file_messagebox.setDefaultButton(QMessageBox.Save)
         ret = save_file_messagebox.exec_()
         if ret == QMessageBox.Save:
-            file_contents: str = self.main_window.container_widget.editor_screen.text_edit.toPlainText()
+            file_contents: str = self.main_window.container_widget.editor_screen.code_editor.toPlainText()
             with open(self.current_file, 'w') as f:
                 f.write(file_contents)
 

@@ -21,27 +21,37 @@
 #  SOFTWARE.
 #
 
-from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QFrame, QHBoxLayout
 
 from lightpad.utils.commons import init_layout
-from lightpad.widgets.screens.editor_screen import EditorScreen
-from lightpad.widgets.screens.welcome_screen import WelcomeScreen
+from lightpad.widgets.editor.code_editor import CodeEditor
 
 
-class ContainerWidget(QWidget):
-    """Main Central widget of the application"""
+class EditorScreen(QFrame):
+    """This screen contains the text editor and other assistance widges."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
 
-        init_layout(self, QVBoxLayout)
-        self.stacked_container: QStackedWidget = QStackedWidget()
-        self.layout().addWidget(self.stacked_container)
+        self.setStyleSheet('background: white; color: black;')
 
-        self.welcome_screen: WelcomeScreen = WelcomeScreen()
-        self.editor_screen: EditorScreen = EditorScreen()
+        init_layout(self, QHBoxLayout)
 
-        self.stacked_container.addWidget(self.welcome_screen)
-        self.stacked_container.addWidget(self.editor_screen)
+        self.code_editor: CodeEditor = CodeEditor()
 
-        self.stacked_container.setCurrentWidget(self.welcome_screen)
+        self.layout().addWidget(self.code_editor)
+
+    def open_file(self, file_path: str) -> None:
+        """Open file for editing.
+
+        Parameters
+        ----------
+        file_path: str
+            The path to file to be opened.
+
+        Returns
+        -------
+        None
+        """
+        with open(file_path, 'r') as f:
+            self.code_editor.setPlainText(f.read())
