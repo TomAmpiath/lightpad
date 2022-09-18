@@ -25,10 +25,9 @@ import os
 import sys
 from typing import List, Optional
 
-from PySide6.QtGui import QFont, QFontDatabase
 from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
 
-from lightpad import base_dir, meta
+from lightpad import meta
 from lightpad.widgets.main_window import MainWindow
 
 
@@ -45,12 +44,6 @@ class Application(QApplication):
         self.setApplicationName(meta['name'])
         self.setApplicationVersion(str(meta['version']))
         self.setApplicationDisplayName(meta['name'])
-
-        font_id: int = QFontDatabase.addApplicationFont(os.path.join(base_dir, os.path.pardir, 'fonts', 'CascadiaMono.ttf'))
-        font_family: str = QFontDatabase.applicationFontFamilies(font_id)[0]
-        font: QFont = QFont(font_family)
-
-        self.setFont(font)
 
         self.main_window: MainWindow = MainWindow()
         self.main_window.show()

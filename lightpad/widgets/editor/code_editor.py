@@ -21,6 +21,11 @@
 #  SOFTWARE.
 #
 
+import os
+
+from PySide6.QtGui import QFont, QFontDatabase
+
+from lightpad import base_dir
 from lightpad.widgets.editor._plain_text_editor import PlainTextEditor
 
 
@@ -29,3 +34,9 @@ class CodeEditor(PlainTextEditor):
 
     def __init__(self) -> None:
         super().__init__()
+
+        font_id: int = QFontDatabase.addApplicationFont(os.path.join(base_dir, os.path.pardir, 'fonts', 'CascadiaMono.ttf'))
+        font_family: str = QFontDatabase.applicationFontFamilies(font_id)[0]
+        font: QFont = QFont(font_family)
+
+        self.setFont(font)
