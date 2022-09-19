@@ -25,7 +25,8 @@ import os
 import sys
 from typing import List, Optional
 
-from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication, QFileDialog
 
 from lightpad import meta
 from lightpad.widgets.main_window import MainWindow
@@ -55,18 +56,21 @@ class Application(QApplication):
         self.main_window.menu_bar.open_file_action.triggered.connect(self.on_open_file)
         self.main_window.menu_bar.open_dir_action.triggered.connect(self.on_open_dir)
         self.main_window.menu_bar.save_file_action.triggered.connect(self.on_save_file)
+        self.main_window.menu_bar.save_file_as_action.triggered.connect(self.on_save_file_as)
         self.main_window.menu_bar.exit_action.triggered.connect(self.closeAllWindows)
 
     def on_open_file(self) -> None:
         """Actions to be performed when open file action is triggered"""
         file_path: str = QFileDialog.getOpenFileName(self.main_window, 'Open File', self.pwd)[0]
         if file_path:
+            self.main_window.setCursor(Qt.WaitCursor)
             self.current_file = file_path
             self.opened_files.append(file_path)
             self.open_files.append(file_path)
 
             self.main_window.container_widget.stacked_container.setCurrentWidget(self.main_window.container_widget.editor_screen)
             self.main_window.container_widget.editor_screen.open_file(file_path)
+            self.main_window.setCursor(Qt.ArrowCursor)
 
     def on_open_dir(self) -> None:
         """Actions to be performed when open dir action is triggered"""
@@ -78,19 +82,23 @@ class Application(QApplication):
 
     def on_save_file(self) -> None:
         """Actions to be performed when save file action is triggered"""
-        save_file_messagebox: QMessageBox = QMessageBox()
-        save_file_messagebox.setWindowTitle('Save File')
-        save_file_messagebox.setText('The document has been modified')
-        save_file_messagebox.setInformativeText('Do you wish to save your changes?')
-        save_file_messagebox.setStandardButtons(QMessageBox.Save | QMessageBox.Cancel)
-        save_file_messagebox.setDefaultButton(QMessageBox.Save)
-        ret = save_file_messagebox.exec_()
-        if ret == QMessageBox.Save:
-            file_contents: str = self.main_window.container_widget.editor_screen.code_editor.toPlainText()
-            with open(self.current_file, 'w') as f:
-                f.write(file_contents)
+        self.main_window.setCursor(Qt.WaitCursor)
+        file_contents: str = self.main_window.container_widget.editor_screen.code_editor.toPlainText()
+        with open(self.current_file, 'w') as f:
+            f.write(file_contents)
+        self.main_window.setCursor(Qt.ArrowCursor)
+
+    def on_save_file_as(self) -> None:
+        """Actions to be performed when save file as action is triggered"""
+        file_path: str = QFileDialog.getSaveFileName(self.main_window, 'Save File As', self.pwd)[0]
+
+        self.main_window.setCursor(Qt.WaitCursor)
+        file_contents: str = self.main_window.container_widget.editor_screen.code_editor.toPlainText()
+        with open(file_path, 'w') as f:
+            f.write(file_contents)
+        self.main_window.setCursor(Qt.ArrowCursor)
 
 
 def main() -> None:
     app: Application = Application(sys.argv)
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

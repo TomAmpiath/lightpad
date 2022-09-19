@@ -37,10 +37,12 @@ class MenuBar(QMenuBar):
         self.open_file_action: QAction = QAction('Open File', self)
         self.open_dir_action: QAction = QAction('Open Dir', self)
         self.save_file_action: QAction = QAction('Save File', self)
+        self.save_file_as_action: QAction = QAction('Save File As', self)
         self.exit_action: QAction = QAction('Exit', self)
         self.file_menu.addAction(self.open_file_action)
         self.file_menu.addAction(self.open_dir_action)
         self.file_menu.addAction(self.save_file_action)
+        self.file_menu.addAction(self.save_file_as_action)
         self.file_menu.addAction(self.exit_action)
 
         self.edit_menu: QMenu = self.addMenu('Edit')
