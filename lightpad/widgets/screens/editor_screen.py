@@ -55,3 +55,4 @@ class EditorScreen(QFrame):
         """
         with open(file_path, 'r') as f:
             self.code_editor.setPlainText(f.read())
+            self.code_editor.setFocus()
