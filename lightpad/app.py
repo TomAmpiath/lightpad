@@ -53,24 +53,38 @@ class Application(QApplication):
 
     def init_connections(self) -> None:
         """Initializes widget connections"""
+        self.main_window.menu_bar.new_file_action.triggered.connect(self.on_new_file)
         self.main_window.menu_bar.open_file_action.triggered.connect(self.on_open_file)
         self.main_window.menu_bar.open_dir_action.triggered.connect(self.on_open_dir)
         self.main_window.menu_bar.save_file_action.triggered.connect(self.on_save_file)
         self.main_window.menu_bar.save_file_as_action.triggered.connect(self.on_save_file_as)
         self.main_window.menu_bar.exit_action.triggered.connect(self.closeAllWindows)
 
-    def on_open_file(self) -> None:
-        """Actions to be performed when open file action is triggered"""
-        file_path: str = QFileDialog.getOpenFileName(self.main_window, 'Open File', self.pwd)[0]
+    def _open_file(self, file_path: str) -> None:
+        """Open given file in code editor"""
         if file_path:
             self.main_window.setCursor(Qt.WaitCursor)
             self.current_file = file_path
             self.opened_files.append(file_path)
             self.open_files.append(file_path)
 
+            if not os.path.exists(file_path):
+                with open(file_path, 'w') as f:
+                    f.write('')
+
             self.main_window.container_widget.stacked_container.setCurrentWidget(self.main_window.container_widget.editor_screen)
             self.main_window.container_widget.editor_screen.open_file(file_path)
             self.main_window.setCursor(Qt.ArrowCursor)
+
+    def on_new_file(self) -> None:
+        """Actions to be performed when new file action is triggered"""
+        file_path: str = QFileDialog.getSaveFileName(self.main_window, 'Create New File', self.pwd)[0]
+        self._open_file(file_path)
+
+    def on_open_file(self) -> None:
+        """Actions to be performed when open file action is triggered"""
+        file_path: str = QFileDialog.getOpenFileName(self.main_window, 'Open File', self.pwd)[0]
+        self._open_file(file_path)
 
     def on_open_dir(self) -> None:
         """Actions to be performed when open dir action is triggered"""
