@@ -21,10 +21,12 @@
 #  SOFTWARE.
 #
 
-from PySide6.QtWidgets import QFrame, QHBoxLayout
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QHBoxLayout, QSplitter
 
 from lightpad.utils.commons import init_layout
 from lightpad.widgets.editor.code_editor import CodeEditor
+from lightpad.widgets.editor.explorer_tree import ExplorerTree
 
 
 class EditorScreen(QFrame):
@@ -37,9 +39,16 @@ class EditorScreen(QFrame):
 
         init_layout(self, QHBoxLayout)
 
+        self._splitter_horizontal: QSplitter = QSplitter(Qt.Horizontal)
+        self._splitter_horizontal.setSizes((200, 200))
+
+        self.explorer_tree: ExplorerTree = ExplorerTree()
         self.code_editor: CodeEditor = CodeEditor()
 
-        self.layout().addWidget(self.code_editor)
+        self._splitter_horizontal.addWidget(self.explorer_tree)
+        self._splitter_horizontal.addWidget(self.code_editor)
+
+        self.layout().addWidget(self._splitter_horizontal)
 
     def open_file(self, file_path: str) -> None:
         """Open file for editing.
