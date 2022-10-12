@@ -47,8 +47,8 @@ class MenuBar(QMenuBar):
         self.file_menu.addAction(self.save_file_as_action)
         self.file_menu.addAction(self.exit_action)
 
-        self.edit_menu: QMenu = self.addMenu('Edit')
-        self.view_menu: QMenu = self.addMenu('View')
-        self.tools_menu: QMenu = self.addMenu('Tools')
-        self.windows_menu: QMenu = self.addMenu('Windows')
-        self.help_menu: QMenu = self.addMenu('Help')
+        # self.edit_menu: QMenu = self.addMenu('Edit')
+        # self.view_menu: QMenu = self.addMenu('View')
+        # self.tools_menu: QMenu = self.addMenu('Tools')
+        # self.windows_menu: QMenu = self.addMenu('Windows')
+        # self.help_menu: QMenu = self.addMenu('Help')
