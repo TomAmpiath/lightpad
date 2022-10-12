@@ -35,7 +35,9 @@ class CodeEditor(PlainTextEditor):
     def __init__(self) -> None:
         super().__init__()
 
-        font_id: int = QFontDatabase.addApplicationFont(os.path.join(base_dir, os.path.pardir, 'fonts', 'CascadiaMono.ttf'))
+        font_id: int = QFontDatabase.addApplicationFont(
+            os.path.join(base_dir, os.path.pardir, 'fonts', 'CascadiaMono.ttf')
+        )
         font_family: str = QFontDatabase.applicationFontFamilies(font_id)[0]
         font: QFont = QFont(font_family)
 

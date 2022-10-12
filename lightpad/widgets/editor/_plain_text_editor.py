@@ -22,7 +22,13 @@
 #
 
 from PySide6.QtCore import QRect, Qt, Slot
-from PySide6.QtGui import QColor, QPainter, QPaintEvent, QResizeEvent, QTextFormat
+from PySide6.QtGui import (
+    QColor,
+    QPainter,
+    QPaintEvent,
+    QResizeEvent,
+    QTextFormat,
+)
 from PySide6.QtWidgets import QPlainTextEdit, QTextEdit
 
 from lightpad.widgets.editor._line_number_area import LineNumberArea
@@ -79,7 +85,9 @@ class PlainTextEditor(QPlainTextEdit):
                     painter.setPen(Qt.black)
                     width = self.line_number_area.width()
                     height = self.fontMetrics().height()
-                    painter.drawText(0, top, width, height, Qt.AlignRight, number)
+                    painter.drawText(
+                        0, top, width, height, Qt.AlignRight, number
+                    )
 
                 block = block.next()
                 top = bottom

@@ -34,7 +34,9 @@ class DebugType(Enum):
     CRITICAL = auto()
 
 
-def debug(*args, debug_type: Optional[DebugType] = DebugType.INFORMATION) -> None:
+def debug(
+    *args, debug_type: Optional[DebugType] = DebugType.INFORMATION
+) -> None:
     message: str = ''
     for arg in args:
         message += str(arg) + ' '
@@ -47,7 +49,12 @@ def debug(*args, debug_type: Optional[DebugType] = DebugType.INFORMATION) -> Non
         print('CRIT\t', *args)
 
 
-def init_layout(widget: QWidget, layout: Union[QBoxLayout, Callable], layout_spacing: int = 0, contents_margins: Tuple[int, int, int, int] = (0, 0, 0, 0)) -> None:
+def init_layout(
+    widget: QWidget,
+    layout: Union[QBoxLayout, Callable],
+    layout_spacing: int = 0,
+    contents_margins: Tuple[int, int, int, int] = (0, 0, 0, 0),
+) -> None:
     """Initialize a layout for the given widget.
 
     Parameters

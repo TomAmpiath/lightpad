@@ -39,8 +39,13 @@ class WelcomeScreen(QFrame):
         self.setStyleSheet('background: white; color: black;')
 
         self.layout().addWidget(QLabel('Welcome'), alignment=Qt.AlignCenter)
-        self.layout().addWidget(QLabel(f'{meta["name"]} - version {meta["version"]}'), alignment=Qt.AlignCenter)
-        self.layout().addWidget(QLabel(f'{meta["description"]}'), alignment=Qt.AlignCenter)
+        self.layout().addWidget(
+            QLabel(f'{meta["name"]} - version {meta["version"]}'),
+            alignment=Qt.AlignCenter,
+        )
+        self.layout().addWidget(
+            QLabel(f'{meta["description"]}'), alignment=Qt.AlignCenter
+        )
         self.layout().addStretch()
 
         self.layout().itemAt(0).widget().setStyleSheet('font-size: 96px;')
