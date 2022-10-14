@@ -22,19 +22,67 @@
 #
 
 import os
+from configparser import ConfigParser
+from glob import glob
+from itertools import chain
+from typing import List
 
-from PySide6.QtWidgets import QFileSystemModel, QTreeView
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QPushButton, QVBoxLayout
+
+from ...utils.commons import init_layout
 
 
-class ExplorerTree(QTreeView):
+class ExplorerTree(QFrame):
     """File Explorer Tree"""
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.model = QFileSystemModel()
-        self.model.setRootPath(os.path.expanduser('~'))
+        init_layout(self, QVBoxLayout)
 
-        self.setModel(self.model)
-        # set model is not enough for some reason
-        self.setRootIndex(self.model.setRootPath(os.path.expanduser('~')))
+        self._exclude_list: List[str] = []
+        user_home_dir: str = os.path.expanduser('~')
+        git_config_file: str = os.path.join(user_home_dir, '.gitconfig')
+        if os.path.exists(git_config_file):
+            config: ConfigParser = ConfigParser()
+            config.read(git_config_file)
+
+            if config.has_option('Core', 'excludefile'):
+                git_global_ignore_file: str = config['Core']['excludefile']
+
+                with open(git_global_ignore_file, 'r') as f:
+                    for line in f:
+                        self._exclude_list.append(line.replace('\n', ''))
+
+        self._items_list: List[QPushButton] = []
+
+        self.load_items(user_home_dir)
+
+        self.layout().addStretch()
+
+    def load_items(self, dir_path: str) -> None:
+        """Load folders and files under given dir_path
+
+        Parameters
+        ----------
+        dir_path: str = Root path to be explored
+
+        Returns
+        -------
+        None
+        """
+        for item in chain(
+            glob(os.path.join(dir_path, '*')),
+            glob(os.path.join(dir_path, '.*')),
+        ):
+            item_name: str = item.lstrip(dir_path)
+            if os.path.isdir(item):
+                item_name += '/'
+            if item_name not in self._exclude_list:
+                button: QPushButton = QPushButton(item_name)
+                color = 'blue' if os.path.isdir(item) else 'black'
+                button.setStyleSheet(f'border: None; color: {color};')
+                self._items_list.append(button)
+                self.layout().addWidget(button, alignment=Qt.AlignLeft)
+        self.layout().addStretch()

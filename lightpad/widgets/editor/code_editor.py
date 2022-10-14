@@ -23,10 +23,12 @@
 
 import os
 
+from PySide6.QtCore import QFile
 from PySide6.QtGui import QFont, QFontDatabase
 
-from lightpad import base_dir
-from lightpad.widgets.editor._plain_text_editor import PlainTextEditor
+from ... import base_dir
+from ...utils.commons import raise_exception
+from ._plain_text_editor import PlainTextEditor
 
 
 class CodeEditor(PlainTextEditor):
@@ -36,9 +38,37 @@ class CodeEditor(PlainTextEditor):
         super().__init__()
 
         font_id: int = QFontDatabase.addApplicationFont(
-            os.path.join(base_dir, os.path.pardir, 'fonts', 'CascadiaMono.ttf')
+            os.path.join(
+                base_dir,
+                os.path.pardir,
+                'resources',
+                'fonts',
+                'CascadiaMono.ttf',
+            )
         )
         font_family: str = QFontDatabase.applicationFontFamilies(font_id)[0]
         font: QFont = QFont(font_family)
 
         self.setFont(font)
+
+    def open_file(self, file_path: str) -> None:
+        """Open file for editing.
+
+        Parameters
+        ----------
+        file_path: str
+            The path to file to be opened.
+
+        Returns
+        -------
+        None
+        """
+        # with open(file_path, 'r') as f:
+        #     self.code_editor.setPlainText(str(f.read()))
+        #     self.code_editor.setFocus()
+        file: QFile = QFile(file_path)
+        if file.open(QFile.ReadOnly):
+            content: str = file.readAll().data().decode('utf8')
+            self.setPlainText(content)
+        else:
+            raise_exception(f'Cannot open file: {file_path}, READ ONLY!')

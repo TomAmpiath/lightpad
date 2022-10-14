@@ -24,8 +24,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout
 
-from lightpad import meta
-from lightpad.utils.commons import init_layout
+from ... import meta
+from ...utils.commons import init_layout
 
 
 class WelcomeScreen(QFrame):

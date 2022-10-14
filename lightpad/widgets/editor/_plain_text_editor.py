@@ -31,7 +31,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QPlainTextEdit, QTextEdit
 
-from lightpad.widgets.editor._line_number_area import LineNumberArea
+from ._line_number_area import LineNumberArea
 
 
 class PlainTextEditor(QPlainTextEdit):

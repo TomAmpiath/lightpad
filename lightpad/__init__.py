@@ -23,6 +23,8 @@
 
 import json
 import os
+import sys
+from traceback import print_exception
 from typing import Dict
 
 __version__: str = '0.1'
@@ -33,3 +35,14 @@ with open(
     os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r'
 ) as meta_file:
     meta: Dict = json.load(meta_file)
+
+
+# Handle uncaught exceptions
+
+
+def _exception_handler(*args, **kwargs):
+    print_exception(*args, **kwargs)
+    sys.exit(1)
+
+
+sys.excepthook = _exception_handler

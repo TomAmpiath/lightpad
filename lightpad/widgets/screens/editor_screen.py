@@ -21,12 +21,12 @@
 #  SOFTWARE.
 #
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QFile, Qt
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QSplitter
 
-from lightpad.utils.commons import init_layout
-from lightpad.widgets.editor.code_editor import CodeEditor
-from lightpad.widgets.editor.explorer_tree import ExplorerTree
+from ...utils.commons import init_layout, raise_exception
+from ..editor.code_editor import CodeEditor
+from ..editor.explorer_tree import ExplorerTree
 
 
 class EditorScreen(QFrame):
@@ -49,19 +49,3 @@ class EditorScreen(QFrame):
         self._splitter_horizontal.addWidget(self.code_editor)
 
         self.layout().addWidget(self._splitter_horizontal)
-
-    def open_file(self, file_path: str) -> None:
-        """Open file for editing.
-
-        Parameters
-        ----------
-        file_path: str
-            The path to file to be opened.
-
-        Returns
-        -------
-        None
-        """
-        with open(file_path, 'r') as f:
-            self.code_editor.setPlainText(f.read())
-            self.code_editor.setFocus()

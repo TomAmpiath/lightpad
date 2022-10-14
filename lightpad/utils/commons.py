@@ -21,11 +21,13 @@
 #  SOFTWARE.
 #
 
+import os
 from datetime import datetime
 from enum import Enum, auto
 from typing import Callable, Optional, Tuple, Union
 
-from PySide6.QtWidgets import QBoxLayout, QWidget
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QBoxLayout, QMessageBox, QWidget
 
 
 class DebugType(Enum):
@@ -37,16 +39,17 @@ class DebugType(Enum):
 def debug(
     *args, debug_type: Optional[DebugType] = DebugType.INFORMATION
 ) -> None:
-    message: str = ''
-    for arg in args:
-        message += str(arg) + ' '
-    print(datetime.now(), end='\t')
-    if debug_type == DebugType.INFORMATION:
-        print('INFO\t', *args)
-    elif debug_type == DebugType.WARNING:
-        print('WARN\t', *args)
-    else:
-        print('CRIT\t', *args)
+    if 'LIGHTPAD_DEBUG' in os.environ and os.environ['LIGHTPAD_DEBUG'] == '1':
+        message: str = ''
+        for arg in args:
+            message += str(arg) + ' '
+        print(datetime.now(), end='\t')
+        if debug_type == DebugType.INFORMATION:
+            print('INFO\t', *args)
+        elif debug_type == DebugType.WARNING:
+            print('WARN\t', *args)
+        else:
+            print('CRIT\t', *args)
 
 
 def init_layout(
@@ -75,3 +78,14 @@ def init_layout(
     widget.setLayout(layout())
     widget.layout().setSpacing(layout_spacing)
     widget.layout().setContentsMargins(*contents_margins)
+
+
+def raise_exception(*args, **kwargs) -> None:
+    message: str = ''
+    for arg in args:
+        message += str(arg) + ' '
+    message_box: QMessageBox = QMessageBox()
+    message_box.setText(message)
+    message_box.setIcon(Qt.CRITICAL)
+    message_box.exec()
+    sys.exit(1)

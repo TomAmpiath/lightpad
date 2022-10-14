@@ -23,9 +23,9 @@
 
 from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
 
-from lightpad.utils.commons import init_layout
-from lightpad.widgets.screens.editor_screen import EditorScreen
-from lightpad.widgets.screens.welcome_screen import WelcomeScreen
+from ..utils.commons import init_layout
+from .screens.editor_screen import EditorScreen
+from .screens.welcome_screen import WelcomeScreen
 
 
 class ContainerWidget(QWidget):
