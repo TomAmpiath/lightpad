@@ -41,7 +41,7 @@ class CodeEditor(PlainTextEditor):
             os.path.join(
                 base_dir,
                 os.path.pardir,
-                'resources',
+                'assets',
                 'fonts',
                 'CascadiaMono.ttf',
             )
@@ -63,9 +63,6 @@ class CodeEditor(PlainTextEditor):
         -------
         None
         """
-        # with open(file_path, 'r') as f:
-        #     self.code_editor.setPlainText(str(f.read()))
-        #     self.code_editor.setFocus()
         file: QFile = QFile(file_path)
         if file.open(QFile.ReadOnly):
             content: str = file.readAll().data().decode('utf8')
