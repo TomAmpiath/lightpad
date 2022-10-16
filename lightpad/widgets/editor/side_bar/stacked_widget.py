@@ -23,7 +23,9 @@
 
 from PySide6.QtWidgets import QStackedWidget
 
-from .explorer_tree import ExplorerTree
+from lightpad.widgets.editor.side_bar.explorer_tree.explorer_tree_widget import (
+    ExplorerTreeWidget,
+)
 
 
 class StackedWidget(QStackedWidget):
@@ -32,6 +34,6 @@ class StackedWidget(QStackedWidget):
     def __init__(self) -> None:
         super().__init__()
 
-        self.explorer_tree: ExplorerTree = ExplorerTree()
+        self.explorer_tree: ExplorerTreeWidget = ExplorerTreeWidget()
 
         self.addWidget(self.explorer_tree)

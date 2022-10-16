@@ -28,8 +28,8 @@ from typing import List
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QFileDialog
 
-from . import meta
-from .widgets.main_window import MainWindow
+from lightpad import meta
+from lightpad.widgets.main_window import MainWindow
 
 
 class Application(QApplication):

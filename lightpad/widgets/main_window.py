@@ -23,9 +23,9 @@
 
 from PySide6.QtWidgets import QMainWindow
 
-from .. import meta
-from .container_widget import ContainerWidget
-from .menu_bar import MenuBar
+from lightpad import meta
+from lightpad.widgets.container_widget import ContainerWidget
+from lightpad.widgets.menu_bar import MenuBar
 
 
 class MainWindow(QMainWindow):

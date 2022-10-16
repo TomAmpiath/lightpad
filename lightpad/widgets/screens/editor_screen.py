@@ -24,10 +24,10 @@
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QSplitter
 
-from ...utils.commons import init_layout
-from ..editor.code_editor import CodeEditor
-from ..editor.side_bar.side_bar_widget import SideBarWidget
-from ..editor.side_bar.stacked_widget import StackedWidget
+from lightpad.utils.commons import init_layout
+from lightpad.widgets.editor.code_editor import CodeEditor
+from lightpad.widgets.editor.side_bar.side_bar_widget import SideBarWidget
+from lightpad.widgets.editor.side_bar.stacked_widget import StackedWidget
 
 
 class EditorScreen(QFrame):

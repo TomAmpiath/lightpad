@@ -23,7 +23,7 @@
 
 from PySide6.QtWidgets import QFrame, QVBoxLayout
 
-from ....utils.commons import init_layout
+from lightpad.utils.commons import init_layout
 
 
 class SideBarWidget(QFrame):

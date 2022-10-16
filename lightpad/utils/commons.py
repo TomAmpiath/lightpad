@@ -82,6 +82,7 @@ def init_layout(
 
 
 def raise_exception(*args, **kwargs) -> None:
+    """Open a message window, and show passed items as critical warning"""
     message: str = ''
     for arg in args:
         message += str(arg) + ' '
