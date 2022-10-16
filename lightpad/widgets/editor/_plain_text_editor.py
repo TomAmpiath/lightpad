@@ -44,9 +44,9 @@ class PlainTextEditor(QPlainTextEdit):
 
         self.line_number_area: LineNumberArea = LineNumberArea(self)
 
-        self.blockCountChanged[int].connect(self.update_line_number_area_width)
-        self.updateRequest[QRect, int].connect(self.update_line_number_area)
-        self.cursorPositionChanged.connect(self.highlight_current_line)
+        self.blockCountChanged[int].connect(self.update_line_number_area_width)  # type: ignore
+        self.updateRequest[QRect, int].connect(self.update_line_number_area)  # type: ignore
+        self.cursorPositionChanged.connect(self.highlight_current_line)  # type: ignore
 
         self.update_line_number_area_width(0)
         self.highlight_current_line()
@@ -87,7 +87,7 @@ class PlainTextEditor(QPlainTextEdit):
                     height = self.fontMetrics().height()
                     painter.drawText(
                         0, top, width, height, Qt.AlignRight, number
-                    )
+                    )  # type: ignore
 
                 block = block.next()
                 top = bottom
@@ -120,12 +120,12 @@ class PlainTextEditor(QPlainTextEdit):
             selection = QTextEdit.ExtraSelection()
 
             line_color = QColor(Qt.yellow).lighter(160)
-            selection.format.setBackground(line_color)
+            selection.format.setBackground(line_color)  # type: ignore
 
-            selection.format.setProperty(QTextFormat.FullWidthSelection, True)
+            selection.format.setProperty(QTextFormat.FullWidthSelection, True)  # type: ignore
 
-            selection.cursor = self.textCursor()
-            selection.cursor.clearSelection()
+            selection.cursor = self.textCursor()  # type: ignore
+            selection.cursor.clearSelection()  # type: ignore
 
             extra_selections.append(selection)
 

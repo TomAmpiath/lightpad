@@ -21,35 +21,17 @@
 #  SOFTWARE.
 #
 
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFrame, QHBoxLayout, QSplitter
+from PySide6.QtWidgets import QStackedWidget
 
-from ...utils.commons import init_layout
-from ..editor.code_editor import CodeEditor
-from ..editor.side_bar.side_bar_widget import SideBarWidget
-from ..editor.side_bar.stacked_widget import StackedWidget
+from .explorer_tree import ExplorerTree
 
 
-class EditorScreen(QFrame):
-    """This screen contains the text editor and other assistance widges."""
+class StackedWidget(QStackedWidget):
+    """Contains stack of widgets controlled via side bar widget"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
-        self.setStyleSheet('background: white; color: black;')
+        self.explorer_tree: ExplorerTree = ExplorerTree()
 
-        init_layout(self, QHBoxLayout)
-
-        self._splitter_horizontal: QSplitter = QSplitter(Qt.Horizontal)
-        self._splitter_horizontal.setSizes((200, 200))
-
-        self.side_bar_widget: SideBarWidget = SideBarWidget()
-        self.stacked_widget: StackedWidget = StackedWidget()
-        self.code_editor: CodeEditor = CodeEditor()
-
-        self.layout().addWidget(self.side_bar_widget)
-
-        self._splitter_horizontal.addWidget(self.stacked_widget)
-        self._splitter_horizontal.addWidget(self.code_editor)
-
-        self.layout().addWidget(self._splitter_horizontal)
+        self.addWidget(self.explorer_tree)

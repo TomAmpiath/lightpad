@@ -53,22 +53,22 @@ class Application(QApplication):
 
     def init_connections(self) -> None:
         """Initializes widget connections"""
-        self.main_window.menu_bar.new_file_action.triggered.connect(
+        self.main_window.menu_bar.new_file_action.triggered.connect(  # type: ignore
             self.on_new_file
         )
-        self.main_window.menu_bar.open_file_action.triggered.connect(
+        self.main_window.menu_bar.open_file_action.triggered.connect(  # type: ignore
             self.on_open_file
         )
-        self.main_window.menu_bar.open_dir_action.triggered.connect(
+        self.main_window.menu_bar.open_dir_action.triggered.connect(  # type: ignore
             self.on_open_dir
         )
-        self.main_window.menu_bar.save_file_action.triggered.connect(
+        self.main_window.menu_bar.save_file_action.triggered.connect(  # type: ignore
             self.on_save_file
         )
-        self.main_window.menu_bar.save_file_as_action.triggered.connect(
+        self.main_window.menu_bar.save_file_as_action.triggered.connect(  # type: ignore
             self.on_save_file_as
         )
-        self.main_window.menu_bar.exit_action.triggered.connect(
+        self.main_window.menu_bar.exit_action.triggered.connect(  # type: ignore
             self.closeAllWindows
         )
 

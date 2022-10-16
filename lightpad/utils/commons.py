@@ -22,6 +22,7 @@
 #
 
 import os
+import sys
 from datetime import datetime
 from enum import Enum, auto
 from typing import Callable, Optional, Tuple, Union
@@ -75,7 +76,7 @@ def init_layout(
     -------
     None
     """
-    widget.setLayout(layout())
+    widget.setLayout(layout())  # type: ignore
     widget.layout().setSpacing(layout_spacing)
     widget.layout().setContentsMargins(*contents_margins)
 
@@ -86,6 +87,6 @@ def raise_exception(*args, **kwargs) -> None:
         message += str(arg) + ' '
     message_box: QMessageBox = QMessageBox()
     message_box.setText(message)
-    message_box.setIcon(Qt.CRITICAL)
+    message_box.setIcon(Qt.CRITICAL)  # type: ignore
     message_box.exec()
     sys.exit(1)
