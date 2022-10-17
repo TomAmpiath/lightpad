@@ -28,7 +28,7 @@ from PySide6.QtGui import QFont, QFontDatabase
 
 from lightpad import base_dir
 from lightpad.utils.commons import raise_exception
-from lightpad.widgets.editor._plain_text_editor import PlainTextEditor
+from lightpad.widgets.screens.editor._plain_text_editor import PlainTextEditor
 
 
 class CodeEditor(PlainTextEditor):

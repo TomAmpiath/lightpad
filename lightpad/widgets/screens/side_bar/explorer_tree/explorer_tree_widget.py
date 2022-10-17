@@ -35,6 +35,7 @@ from PySide6.QtWidgets import (
     QLayout,
     QLayoutItem,
     QPushButton,
+    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
@@ -47,10 +48,6 @@ class ExplorerTreeWidget(QFrame):
 
     def __init__(self) -> None:
         super().__init__()
-
-        init_layout(
-            self, QVBoxLayout, layout_spacing=4, contents_margins=(4, 2, 2, 2)
-        )
 
         self._exclude_list: List[str] = []
         self._file_icon_provider: QFileIconProvider = QFileIconProvider()
@@ -71,9 +68,22 @@ class ExplorerTreeWidget(QFrame):
 
         self._items_list: List[QPushButton] = []
 
+        init_layout(self, QVBoxLayout)
+
+        self._scroll_area: QScrollArea = QScrollArea()
+        self._scroll_widget: QWidget = QWidget()
+        self._scroll_area.setWidget(self._scroll_widget)
+        self._scroll_area.setWidgetResizable(True)
+        init_layout(
+            self._scroll_widget,
+            QVBoxLayout,
+            layout_spacing=4,
+            contents_margins=(4, 2, 2, 2),
+        )
+
         self.load_items(user_home_dir)
 
-        self.layout().addStretch()  # type: ignore
+        self.layout().addWidget(self._scroll_area)
 
     def clear_layout_items(self, layout: QLayout) -> None:
         """Clear all items in the layouto
@@ -108,13 +118,13 @@ class ExplorerTreeWidget(QFrame):
         -------
         None
         """
-        self.clear_layout_items(self.layout())
+        self.clear_layout_items(self._scroll_widget.layout())
         for item in chain(
             glob(os.path.join(dir_path, '*')),
             glob(os.path.join(dir_path, '.*')),
         ):
             icon: QIcon = self._file_icon_provider.icon(QFileInfo(item))
-            item_name: str = item.lstrip(dir_path)
+            item_name: str = os.path.basename(os.path.normpath(item))
             if os.path.isdir(item):
                 item_name += '/'
             if item_name not in self._exclude_list:
@@ -123,5 +133,5 @@ class ExplorerTreeWidget(QFrame):
                 color = 'blue' if os.path.isdir(item) else 'black'
                 button.setStyleSheet(f'border: None; color: {color};')
                 self._items_list.append(button)
-                self.layout().addWidget(button, alignment=Qt.AlignLeft)  # type: ignore
-        self.layout().addStretch()  # type: ignore
+                self._scroll_widget.layout().addWidget(button, alignment=Qt.AlignLeft)  # type: ignore
+        self._scroll_widget.layout().addStretch()  # type: ignore
