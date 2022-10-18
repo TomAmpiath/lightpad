@@ -52,6 +52,6 @@ class EditorScreen(QFrame):
         self._splitter_horizontal.setStretchFactor(1, 9)
 
         self.side_bar_widget: SideBarWidget = SideBarWidget()
-    
+
         self.layout().addWidget(self.side_bar_widget)
         self.layout().addWidget(self._splitter_horizontal)

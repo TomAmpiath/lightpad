@@ -71,6 +71,7 @@ class ExplorerTreeWidget(QFrame):
         init_layout(self, QVBoxLayout)
 
         self._scroll_area: QScrollArea = QScrollArea()
+        self._scroll_area.setStyleSheet('border: None;')
         self._scroll_widget: QWidget = QWidget()
         self._scroll_area.setWidget(self._scroll_widget)
         self._scroll_area.setWidgetResizable(True)
