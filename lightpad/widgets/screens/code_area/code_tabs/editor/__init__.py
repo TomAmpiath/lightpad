@@ -20,34 +20,3 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFrame, QSplitter, QVBoxLayout
-
-from lightpad.utils.commons import init_layout
-from lightpad.widgets.screens.code_area.code_tabs.code_tabs_widget import CodeTabsWidget
-
-
-class CodeAreaFrame(QFrame):
-    """Frame containing code editor and terminal"""
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        init_layout(self, QVBoxLayout)
-
-        self._splitter_vertical: QSplitter = QSplitter(Qt.Vertical)
-
-        self.code_tabs_widget: CodeTabsWidget = CodeTabsWidget()
-        # /* TBD --- Terminal Frame
-        self.terminal_frame = QFrame()
-        self.terminal_frame.setStyleSheet('background: black;')
-        # */
-
-        self._splitter_vertical.addWidget(self.code_tabs_widget)
-        self._splitter_vertical.addWidget(self.terminal_frame)
-
-        self._splitter_vertical.setStretchFactor(0, 8)
-        self._splitter_vertical.setStretchFactor(1, 2)
-
-        self.layout().addWidget(self._splitter_vertical)

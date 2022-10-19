@@ -28,7 +28,7 @@ from PySide6.QtGui import QFont, QFontDatabase
 
 from lightpad import base_dir
 from lightpad.utils.commons import debug, raise_exception
-from lightpad.widgets.screens.code_area.editor._plain_text_editor import PlainTextEditor
+from lightpad.widgets.screens.code_area.code_tabs.editor._plain_text_editor import PlainTextEditor
 
 
 class CodeEditor(PlainTextEditor):
@@ -36,6 +36,8 @@ class CodeEditor(PlainTextEditor):
 
     def __init__(self) -> None:
         super().__init__()
+
+        self.file_path: str = os.path.join(os.path.expanduser('~'), 'unnamed')  # default file path
 
         font_id: int = QFontDatabase.addApplicationFont(
             os.path.join(
@@ -66,10 +68,17 @@ class CodeEditor(PlainTextEditor):
         """
         try:
             start_time: time.time = time.time()
-            with open(file_path, 'r') as f:
-                content: str = f.read()
+
+            content: str = ''
+
+            if os.path.isfile(file_path):
+                with open(file_path, 'r') as f:
+                    content = f.read()
+
             debug(f'Took: %.2f seconds to read %s' % (time.time() - start_time, file_path))
+
             self.setPlainText(content)
+            self.file_path = file_path
             return True
         except:
             raise_exception(f'Unsupported file type!', terminate=False)

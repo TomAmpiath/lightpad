@@ -23,21 +23,18 @@
 
 import os
 import sys
-from typing import List
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QFileDialog
 
 from lightpad import meta
+from lightpad.utils.commons import debug
 from lightpad.widgets.main_window import MainWindow
 
 
 class Application(QApplication):
 
     pwd: str = os.path.expanduser('~')
-    current_file: str = ''
-    opened_files: List[str] = []
-    open_files: List[str] = []
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -64,15 +61,8 @@ class Application(QApplication):
         """Open given file in code editor"""
         if file_path:
             self.main_window.setCursor(Qt.WaitCursor)
-            self.current_file = file_path
-            self.opened_files.append(file_path)
-            self.open_files.append(file_path)
 
-            if not os.path.exists(file_path):
-                with open(file_path, 'w') as f:
-                    f.write('')
-
-            if self.main_window.container_widget.editor_screen.code_area_frame.code_editor.open_file(file_path):
+            if self.main_window.container_widget.editor_screen.code_area_frame.code_tabs_widget.open_file(file_path):
                 self.main_window.container_widget.stacked_container.setCurrentWidget(
                     self.main_window.container_widget.editor_screen
                 )
@@ -83,16 +73,19 @@ class Application(QApplication):
     def on_new_file(self) -> None:
         """Actions to be performed when new file action is triggered"""
         file_path: str = QFileDialog.getSaveFileName(self.main_window, 'Create New File', self.pwd)[0]
+        debug('Opening new file: %s' % (file_path))
         self._open_file(file_path)
 
     def on_open_file(self) -> None:
         """Actions to be performed when open file action is triggered"""
         file_path: str = QFileDialog.getOpenFileName(self.main_window, 'Open File', self.pwd)[0]
+        debug('Opening file: %s' % (file_path))
         self._open_file(file_path)
 
     def on_open_dir(self) -> None:
         """Actions to be performed when open dir action is triggered"""
         dir_path: str = QFileDialog.getExistingDirectory(self.main_window, 'Open Directory', self.pwd)
+        debug('Opening dir: %s' % (dir_path))
         if dir_path:
             self.pwd = dir_path
 
@@ -103,27 +96,29 @@ class Application(QApplication):
 
     def on_save_file(self) -> None:
         """Actions to be performed when save file action is triggered"""
-        if self.current_file:
-            self.main_window.setCursor(Qt.WaitCursor)
-            file_contents: str = (
-                self.main_window.container_widget.editor_screen.code_area_frame.code_editor.toPlainText()
-            )
-            with open(self.current_file, 'w') as f:
-                f.write(file_contents)
-            self.main_window.setCursor(Qt.ArrowCursor)
+        self.main_window.setCursor(Qt.WaitCursor)
+        file_contents: str = self.main_window.container_widget.editor_screen.code_area_frame.code_tabs_widget.get_text()
+        current_file: str = (
+            self.main_window.container_widget.editor_screen.code_area_frame.code_tabs_widget.currentWidget().file_path
+        )
+        debug('Saving file: %s' % (current_file))
+        with open(current_file, 'w') as f:
+            f.write(file_contents)
+        self.main_window.setCursor(Qt.ArrowCursor)
 
     def on_save_file_as(self) -> None:
         """Actions to be performed when save file as action is triggered"""
-        if self.current_file:
-            file_path: str = QFileDialog.getSaveFileName(self.main_window, 'Save File As', self.pwd)[0]
+        file_path: str = QFileDialog.getSaveFileName(self.main_window, 'Save File As', self.pwd)[0]
 
-            self.main_window.setCursor(Qt.WaitCursor)
-            file_contents: str = (
-                self.main_window.container_widget.editor_screen.code_area_frame.code_editor.toPlainText()
-            )
-            with open(file_path, 'w') as f:
-                f.write(file_contents)
-            self.main_window.setCursor(Qt.ArrowCursor)
+        self.main_window.setCursor(Qt.WaitCursor)
+        file_contents: str = self.main_window.container_widget.editor_screen.code_area_frame.code_tabs_widget.get_text()
+        self.main_window.container_widget.editor_screen.code_area_frame.code_tabs_widget.currentWidget().file_path = (
+            file_path
+        )
+        debug('Saving file: %s' % (file_path))
+        with open(file_path, 'w') as f:
+            f.write(file_contents)
+        self.main_window.setCursor(Qt.ArrowCursor)
 
 
 def main() -> None:
