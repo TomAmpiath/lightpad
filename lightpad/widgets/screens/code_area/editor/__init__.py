@@ -20,20 +20,3 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-
-from PySide6.QtWidgets import QStackedWidget
-
-from lightpad.widgets.screens.side_bar.explorer_tree.explorer_tree_widget import ExplorerTreeWidget
-
-
-class StackedWidget(QStackedWidget):
-    """Contains stack of widgets controlled via side bar widget"""
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.explorer_tree: ExplorerTreeWidget = ExplorerTreeWidget()
-
-        self.addWidget(self.explorer_tree)
-
-        self.setCurrentWidget(self.explorer_tree)

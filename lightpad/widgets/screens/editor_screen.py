@@ -25,7 +25,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QSplitter
 
 from lightpad.utils.commons import init_layout
-from lightpad.widgets.screens.editor.code_editor import CodeEditor
+from lightpad.widgets.screens.code_area.code_area_frame import CodeAreaFrame
 from lightpad.widgets.screens.side_bar.side_bar_widget import SideBarWidget
 from lightpad.widgets.screens.side_bar.stacked_widget import StackedWidget
 
@@ -41,12 +41,12 @@ class EditorScreen(QFrame):
         init_layout(self, QHBoxLayout)
 
         self._splitter_horizontal: QSplitter = QSplitter(Qt.Horizontal)
-        self._splitter_horizontal.setSizes((200, 200))
+
         self.stacked_widget: StackedWidget = StackedWidget()
-        self.code_editor: CodeEditor = CodeEditor()
+        self.code_area_frame: CodeAreaFrame = CodeAreaFrame()
 
         self._splitter_horizontal.addWidget(self.stacked_widget)
-        self._splitter_horizontal.addWidget(self.code_editor)
+        self._splitter_horizontal.addWidget(self.code_area_frame)
 
         self._splitter_horizontal.setStretchFactor(0, 1)
         self._splitter_horizontal.setStretchFactor(1, 9)

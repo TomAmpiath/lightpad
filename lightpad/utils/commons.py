@@ -27,7 +27,6 @@ from datetime import datetime
 from enum import Enum, auto
 from typing import Callable, Optional, Tuple, Union
 
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QBoxLayout, QMessageBox, QWidget
 
 
@@ -37,9 +36,7 @@ class DebugType(Enum):
     CRITICAL = auto()
 
 
-def debug(
-    *args, debug_type: Optional[DebugType] = DebugType.INFORMATION
-) -> None:
+def debug(*args, debug_type: Optional[DebugType] = DebugType.INFORMATION) -> None:
     if 'LIGHTPAD_DEBUG' in os.environ and os.environ['LIGHTPAD_DEBUG'] == '1':
         message: str = ''
         for arg in args:
@@ -88,6 +85,8 @@ def raise_exception(*args, **kwargs) -> None:
         message += str(arg) + ' '
     message_box: QMessageBox = QMessageBox()
     message_box.setText(message)
-    message_box.setIcon(Qt.CRITICAL)  # type: ignore
+    message_box.setIcon(QMessageBox.Critical)  # type: ignore
     message_box.exec()
-    sys.exit(1)
+    debug(message, debug_type=DebugType.CRITICAL)
+    if 'terminate' in kwargs and kwargs['terminate']:
+        sys.exit(1)

@@ -43,9 +43,7 @@ class WelcomeScreen(QFrame):
             QLabel(f'{meta["name"]} - version {meta["version"]}'),
             alignment=Qt.AlignCenter,  # type: ignore
         )
-        self.layout().addWidget(
-            QLabel(f'{meta["description"]}'), alignment=Qt.AlignCenter  # type: ignore
-        )
+        self.layout().addWidget(QLabel(f'{meta["description"]}'), alignment=Qt.AlignCenter)  # type: ignore
         self.layout().addStretch()  # type: ignore
 
         self.layout().itemAt(0).widget().setStyleSheet('font-size: 96px;')

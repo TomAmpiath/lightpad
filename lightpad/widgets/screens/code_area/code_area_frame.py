@@ -21,19 +21,33 @@
 #  SOFTWARE.
 #
 
-from PySide6.QtWidgets import QStackedWidget
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QSplitter, QVBoxLayout
 
-from lightpad.widgets.screens.side_bar.explorer_tree.explorer_tree_widget import ExplorerTreeWidget
+from lightpad.utils.commons import init_layout
+from lightpad.widgets.screens.code_area.editor.code_editor import CodeEditor
 
 
-class StackedWidget(QStackedWidget):
-    """Contains stack of widgets controlled via side bar widget"""
+class CodeAreaFrame(QFrame):
+    """Frame containing code editor and terminal"""
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.explorer_tree: ExplorerTreeWidget = ExplorerTreeWidget()
+        init_layout(self, QVBoxLayout)
 
-        self.addWidget(self.explorer_tree)
+        self._splitter_vertical: QSplitter = QSplitter(Qt.Vertical)
 
-        self.setCurrentWidget(self.explorer_tree)
+        self.code_editor: CodeEditor = CodeEditor()
+        # /* TBD --- Terminal Frame
+        self.terminal_frame = QFrame()
+        self.terminal_frame.setStyleSheet('background: black;')
+        # */
+
+        self._splitter_vertical.addWidget(self.code_editor)
+        self._splitter_vertical.addWidget(self.terminal_frame)
+
+        self._splitter_vertical.setStretchFactor(0, 8)
+        self._splitter_vertical.setStretchFactor(1, 2)
+
+        self.layout().addWidget(self._splitter_vertical)

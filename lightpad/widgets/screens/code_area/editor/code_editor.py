@@ -22,13 +22,13 @@
 #
 
 import os
+import time
 
-from PySide6.QtCore import QFile
 from PySide6.QtGui import QFont, QFontDatabase
 
 from lightpad import base_dir
-from lightpad.utils.commons import raise_exception
-from lightpad.widgets.screens.editor._plain_text_editor import PlainTextEditor
+from lightpad.utils.commons import debug, raise_exception
+from lightpad.widgets.screens.code_area.editor._plain_text_editor import PlainTextEditor
 
 
 class CodeEditor(PlainTextEditor):
@@ -47,11 +47,11 @@ class CodeEditor(PlainTextEditor):
             )
         )
         font_family: str = QFontDatabase.applicationFontFamilies(font_id)[0]
-        font: QFont = QFont(font_family)
+        font: QFont = QFont(font_family, 12)
 
         self.setFont(font)
 
-    def open_file(self, file_path: str) -> None:
+    def open_file(self, file_path: str) -> bool:
         """Open file for editing.
 
         Parameters
@@ -61,11 +61,17 @@ class CodeEditor(PlainTextEditor):
 
         Returns
         -------
-        None
+        status: bool
+            True if file was successfully opened, else False.
         """
-        file: QFile = QFile(file_path)
-        if file.open(QFile.ReadOnly):
-            content: str = file.readAll().data().decode('utf8')
+        try:
+            start_time: time.time = time.time()
+            with open(file_path, 'r') as f:
+                content: str = f.read()
+            debug(f'Took: %.2f seconds to read %s' % (time.time() - start_time, file_path))
             self.setPlainText(content)
-        else:
-            raise_exception(f'Cannot open file: {file_path}, READ ONLY!')
+            return True
+        except:
+            raise_exception(f'Unsupported file type!', terminate=False)
+            debug('Could not open file: %s' % (file_path))
+            return False
