@@ -40,6 +40,10 @@ class MenuBar(QMenuBar):
         self.save_file_action: QAction = QAction('Save File', self)
         self.save_file_as_action: QAction = QAction('Save File As', self)
         self.exit_action: QAction = QAction('Exit', self)
+
+        self.save_file_action.setEnabled(False)
+        self.save_file_as_action.setEnabled(False)
+
         self.file_menu.addAction(self.new_file_action)
         self.file_menu.addAction(self.open_file_action)
         self.file_menu.addAction(self.open_dir_action)

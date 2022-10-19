@@ -90,6 +90,8 @@ class Application(QApplication):
             self.main_window.container_widget.editor_screen.code_editor.open_file(
                 file_path
             )
+            self.main_window.menu_bar.save_file_action.setEnabled(True)
+            self.main_window.menu_bar.save_file_as_action.setEnabled(True)
             self.main_window.setCursor(Qt.ArrowCursor)
 
     def on_new_file(self) -> None:
@@ -117,6 +119,7 @@ class Application(QApplication):
             self.main_window.container_widget.stacked_container.setCurrentWidget(
                 self.main_window.container_widget.editor_screen
             )
+            self.main_window.menu_bar.save_file_as_action.setEnabled(True)
 
     def on_save_file(self) -> None:
         """Actions to be performed when save file action is triggered"""
