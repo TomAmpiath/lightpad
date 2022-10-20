@@ -22,6 +22,7 @@
 #
 
 import os
+from typing import Dict
 
 from PySide6.QtWidgets import QTabWidget
 
@@ -33,6 +34,8 @@ class CodeTabsWidget(QTabWidget):
 
     def __init__(self) -> None:
         super().__init__()
+
+        self._opened_files_dict: Dict[str, CodeEditor] = {}
 
         self.setTabsClosable(True)
         self.setMovable(True)
@@ -47,14 +50,20 @@ class CodeTabsWidget(QTabWidget):
         status: bool
             True if file was successfully opened, else False.
         """
-        code_editor_instance: CodeEditor = CodeEditor()
-        status: bool = code_editor_instance.open_file(file_path)
-        if status:
-            file_name: str = os.path.basename(os.path.normpath(file_path))
-            self.addTab(code_editor_instance, file_name)
-            self.setCurrentWidget(code_editor_instance)
+        status: bool = True
+        if file_path in self._opened_files_dict.keys():
+            code_editor: CodeEditor = self._opened_files_dict[file_path]
+            self.setCurrentWidget(code_editor)
         else:
-            del code_editor_instance
+            code_editor_instance: CodeEditor = CodeEditor()
+            status = code_editor_instance.open_file(file_path)
+            if status:
+                file_name: str = os.path.basename(os.path.normpath(file_path))
+                self.addTab(code_editor_instance, file_name)
+                self.setCurrentWidget(code_editor_instance)
+                self._opened_files_dict[file_path] = code_editor_instance
+            else:
+                del code_editor_instance
         return status
 
     def get_text(self) -> str:
