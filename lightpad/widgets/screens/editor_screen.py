@@ -48,8 +48,8 @@ class EditorScreen(QFrame):
         self._splitter_horizontal.addWidget(self.stacked_widget)
         self._splitter_horizontal.addWidget(self.code_area_frame)
 
-        self._splitter_horizontal.setStretchFactor(0, 1)
-        self._splitter_horizontal.setStretchFactor(1, 9)
+        self._splitter_horizontal.setStretchFactor(0, 2)
+        self._splitter_horizontal.setStretchFactor(1, 8)
 
         self.side_bar_widget: SideBarWidget = SideBarWidget()
 
