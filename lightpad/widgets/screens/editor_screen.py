@@ -21,6 +21,8 @@
 #  SOFTWARE.
 #
 
+import platform
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QSplitter
 
@@ -48,8 +50,12 @@ class EditorScreen(QFrame):
         self._splitter_horizontal.addWidget(self.stacked_widget)
         self._splitter_horizontal.addWidget(self.code_area_frame)
 
-        self._splitter_horizontal.setStretchFactor(0, 2)
-        self._splitter_horizontal.setStretchFactor(1, 8)
+        if platform.system() == 'Windows':
+            self._splitter_horizontal.setStretchFactor(0, 1)
+            self._splitter_horizontal.setStretchFactor(1, 9)
+        else:
+            self._splitter_horizontal.setStretchFactor(0, 2)
+            self._splitter_horizontal.setStretchFactor(1, 8)
 
         self.side_bar_widget: SideBarWidget = SideBarWidget()
 
