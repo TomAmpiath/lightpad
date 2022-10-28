@@ -40,14 +40,14 @@ class CodeAreaFrame(QFrame):
 
         self.code_tabs_widget: CodeTabsWidget = CodeTabsWidget()
         # /* TBD --- Terminal Frame
-        self.terminal_frame = QFrame()
-        self.terminal_frame.setStyleSheet('background: black;')
+        # self.terminal_frame = QFrame()
+        # self.terminal_frame.setStyleSheet('background: black;')
         # */
 
         self._splitter_vertical.addWidget(self.code_tabs_widget)
-        self._splitter_vertical.addWidget(self.terminal_frame)
+        # self._splitter_vertical.addWidget(self.terminal_frame)
 
-        self._splitter_vertical.setStretchFactor(0, 8)
-        self._splitter_vertical.setStretchFactor(1, 2)
+        # self._splitter_vertical.setStretchFactor(0, 8)
+        # self._splitter_vertical.setStretchFactor(1, 2)
 
         self.layout().addWidget(self._splitter_vertical)
