@@ -21,18 +21,20 @@
 #  SOFTWARE.
 #
 
-from lightpad.utils.custom_typing import HexColor
-from lightpad.utils.commons import raise_exception
-
 from __future__ import annotations
 
 from enum import Enum, auto
+
+from lightpad.utils.commons import raise_exception
+from lightpad.utils.custom_typing import HexColor
+
 
 class BASE_COLOR(Enum):
     GREY = auto()
     RED = auto()
     GREEN = auto()
     BLUE = auto()
+
 
 class SHADE(Enum):
     EXTRA_LIGHT = auto()
@@ -51,24 +53,24 @@ class _RGB:
         self.red = red
         self.green = green
         self.blue = blue
-    
+
     def get_hexcolor(self) -> HexColor:
         return '#%02x%02x%02x' % (self.red, self.green, self.blue)
-    
+
     def __add__(self: _RGB, rgb_instance: _RGB) -> _RGB:
         return _RGB(
             min(self.red + rgb_instance.red, 255),
             min(self.green + rgb_instance.green, 255),
             min(self.blue + rgb_instance.blue, 255),
         )
-    
+
     def __sub__(self: _RGB, rgb_instance: _RGB) -> _RGB:
         return _RGB(
             max(self.red - rgb_instance.red, 0),
             max(self.green - rgb_instance.green, 0),
             max(self.blue - rgb_instance.blue, 0),
         )
-    
+
     def __mul__(self: _RGB, scalar: float) -> _RGB:
         if not 0 <= scalar:
             raise_exception('Unsupported scalar used for RGB multiplication')
@@ -77,7 +79,7 @@ class _RGB:
             min(int(self.green * scalar), 255),
             min(int(self.blue * scalar), 255),
         )
-    
+
     def __truediv__(self: _RGB, scalar: float) -> _RGB:
         if not 0 < scalar:
             raise_exception('Unsupported scalar used for RGB division')
@@ -86,28 +88,28 @@ class _RGB:
             max(int(self.green / scalar), 0),
             max(int(self.blue / scalar), 0),
         )
-    
+
     def __repr__(self) -> str:
         return f'_RGB(red: {self.red}, green: {self.green}, blue: {self.blue})'
 
 
 def get_color(base_color: BASE_COLOR, shade: SHADE) -> HexColor:
     """Get color of given base color with given shade.
-    
+
     Parameters
     ----------
     base_color: BASE_COLOR
         Base color enum.
     shade: SHADE
         Shade of color enum.
-    
+
     Returns
     -------
     color: HexColor
         HexColor value for the color.
     """
     rgb_color: _RGB = _RGB(0, 0, 0)
-    
+
     if base_color == BASE_COLOR.GREY:
         rgb_color += _RGB(127, 127, 127)
     elif base_color == BASE_COLOR.RED:
@@ -118,7 +120,7 @@ def get_color(base_color: BASE_COLOR, shade: SHADE) -> HexColor:
         rgb_color += _RGB(0, 0, 127)
     else:
         raise_exception('Unsupported base color!')
-    
+
     if shade == SHADE.EXTRA_LIGHT:
         rgb_color /= 5.0
     elif shade == SHADE.LIGHTER:
@@ -135,6 +137,6 @@ def get_color(base_color: BASE_COLOR, shade: SHADE) -> HexColor:
         rgb_color *= 1.8
     else:
         raise_exception('Unsupported shade!')
-        
+
     color: HexColor = rgb_color.get_hexcolor()
     return color
