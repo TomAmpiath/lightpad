@@ -29,18 +29,10 @@ from typing import List
 
 from PySide6.QtCore import QFileInfo, Qt
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import (
-    QFileIconProvider,
-    QFrame,
-    QLayout,
-    QLayoutItem,
-    QPushButton,
-    QScrollArea,
-    QVBoxLayout,
-    QWidget,
-)
+from PySide6.QtWidgets import QFileIconProvider, QFrame, QLayout, QLayoutItem, QScrollArea, QVBoxLayout, QWidget
 
 from lightpad.utils.commons import init_layout
+from lightpad.widgets.screens.side_bar.explorer_tree.explorer_item import ExplorerItem
 
 
 class ExplorerTreeWidget(QFrame):
@@ -66,7 +58,7 @@ class ExplorerTreeWidget(QFrame):
                     for line in f:
                         self._exclude_list.append(line.replace('\n', ''))
 
-        self._items_list: List[QPushButton] = []
+        self._items_list: List[ExplorerItem] = []
 
         init_layout(self, QVBoxLayout)
 
@@ -120,19 +112,12 @@ class ExplorerTreeWidget(QFrame):
         None
         """
         self.clear_layout_items(self._scroll_widget.layout())
-        for item in chain(
+        for item_path in chain(
             glob(os.path.join(dir_path, '*')),
             glob(os.path.join(dir_path, '.*')),
         ):
-            icon: QIcon = self._file_icon_provider.icon(QFileInfo(item))
-            item_name: str = os.path.basename(os.path.normpath(item))
-            if os.path.isdir(item):
-                item_name += '/'
-            if item_name not in self._exclude_list:
-                button: QPushButton = QPushButton(item_name)
-                button.setIcon(icon)
-                color = 'blue' if os.path.isdir(item) else 'black'
-                button.setStyleSheet(f'border: None; color: {color};')
-                self._items_list.append(button)
-                self._scroll_widget.layout().addWidget(button, alignment=Qt.AlignLeft)  # type: ignore
+            if item_path not in self._exclude_list:
+                explorer_item: ExplorerItem = ExplorerItem(item_path)
+                self._items_list.append(explorer_item)
+                self._scroll_widget.layout().addWidget(explorer_item, alignment=Qt.AlignLeft)  # type: ignore
         self._scroll_widget.layout().addStretch()  # type: ignore
