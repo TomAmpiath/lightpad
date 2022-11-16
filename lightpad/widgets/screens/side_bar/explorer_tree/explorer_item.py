@@ -28,7 +28,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QFileIconProvider, QFrame, QPushButton, QVBoxLayout
 
 from lightpad.utils.colors import BASE_COLOR, SHADE, get_color
-from lightpad.utils.commons import debug, init_layout
+from lightpad.utils.commons import init_layout
 from lightpad.utils.custom_typing import HexColor
 
 

@@ -27,8 +27,7 @@ from glob import glob
 from itertools import chain
 from typing import List
 
-from PySide6.QtCore import QFileInfo, Qt
-from PySide6.QtGui import QIcon
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QFileIconProvider, QFrame, QLayout, QLayoutItem, QScrollArea, QVBoxLayout, QWidget
 
 from lightpad.utils.commons import init_layout
