@@ -36,7 +36,7 @@ class CodeAreaFrame(QFrame):
 
         init_layout(self, QVBoxLayout)
 
-        self._splitter_vertical: QSplitter = QSplitter(Qt.Vertical)
+        self._splitter_vertical: QSplitter = QSplitter(Qt.Orientation.Vertical)
 
         self.code_tabs_widget: CodeTabsWidget = CodeTabsWidget()
         # /* TBD --- Terminal Frame

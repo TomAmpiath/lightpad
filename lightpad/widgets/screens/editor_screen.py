@@ -42,10 +42,10 @@ class EditorScreen(QFrame):
 
         init_layout(self, QHBoxLayout)
 
-        self._splitter_horizontal: QSplitter = QSplitter(Qt.Horizontal)
+        self._splitter_horizontal: QSplitter = QSplitter(Qt.Orientation.Horizontal)  # type: ignore
 
-        self.stacked_widget: StackedWidget = StackedWidget()
-        self.code_area_frame: CodeAreaFrame = CodeAreaFrame()
+        self.stacked_widget: StackedWidget = StackedWidget()  # type: ignore
+        self.code_area_frame: CodeAreaFrame = CodeAreaFrame()  # type: ignore
 
         self._splitter_horizontal.addWidget(self.stacked_widget)
         self._splitter_horizontal.addWidget(self.code_area_frame)
@@ -57,7 +57,7 @@ class EditorScreen(QFrame):
             self._splitter_horizontal.setStretchFactor(0, 2)
             self._splitter_horizontal.setStretchFactor(1, 8)
 
-        self.side_bar_widget: SideBarWidget = SideBarWidget()
+        self.side_bar_widget: SideBarWidget = SideBarWidget()  # type: ignore
 
         self.layout().addWidget(self.side_bar_widget)
         self.layout().addWidget(self._splitter_horizontal)

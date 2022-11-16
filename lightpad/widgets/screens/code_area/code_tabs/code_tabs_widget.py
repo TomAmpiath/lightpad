@@ -40,7 +40,7 @@ class CodeTabsWidget(QTabWidget):
         self.setTabsClosable(True)
         self.setMovable(True)
 
-        self.tabCloseRequested.connect(self.removeTab)
+        self.tabCloseRequested.connect(self.removeTab)  # type: ignore
 
     def open_file(self, file_path: str) -> bool:
         """Create a new code editor tab for the given file.
@@ -74,4 +74,4 @@ class CodeTabsWidget(QTabWidget):
         text: str
             Text of current code editor tab.
         """
-        return self.currentWidget().toPlainText()
+        return self.currentWidget().toPlainText()  # type: ignore

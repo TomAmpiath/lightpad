@@ -119,5 +119,5 @@ class ExplorerTreeWidget(QFrame):
             if item_path not in self._exclude_list:
                 explorer_item: ExplorerItem = ExplorerItem(item_path)
                 self._items_list.append(explorer_item)
-                self._scroll_widget.layout().addWidget(explorer_item, alignment=Qt.AlignLeft)  # type: ignore
+                self._scroll_widget.layout().addWidget(explorer_item, alignment=Qt.AlignmentFlag.AlignLeft)  # type: ignore
         self._scroll_widget.layout().addStretch()  # type: ignore

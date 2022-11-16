@@ -69,7 +69,7 @@ class PlainTextEditor(QPlainTextEdit):
     def line_number_area_paint_event(self, event: QPaintEvent) -> None:
         """overrides paint event for line number area"""
         with QPainter(self.line_number_area) as painter:
-            painter.fillRect(event.rect(), Qt.lightGray)
+            painter.fillRect(event.rect(), Qt.GlobalColor.lightGray)
             block = self.firstVisibleBlock()
             block_number = block.blockNumber()
             offset = self.contentOffset()
@@ -79,10 +79,10 @@ class PlainTextEditor(QPlainTextEdit):
             while block.isValid() and top <= event.rect().bottom():
                 if block.isVisible() and bottom >= event.rect().top():
                     number = str(block_number + 1)
-                    painter.setPen(Qt.black)
+                    painter.setPen(Qt.GlobalColor.black)
                     width = self.line_number_area.width()
                     height = self.fontMetrics().height()
-                    painter.drawText(0, top, width, height, Qt.AlignRight, number)  # type: ignore
+                    painter.drawText(0, top, width, height, Qt.AlignmentFlag.AlignRight, number)  # type: ignore
 
                 block = block.next()
                 top = bottom
@@ -114,7 +114,7 @@ class PlainTextEditor(QPlainTextEdit):
         if not self.isReadOnly():
             selection = QTextEdit.ExtraSelection()
 
-            line_color = QColor(Qt.yellow).lighter(160)
+            line_color = QColor(Qt.GlobalColor.yellow).lighter(160)
             selection.format.setBackground(line_color)  # type: ignore
 
             selection.format.setProperty(QTextFormat.FullWidthSelection, True)  # type: ignore

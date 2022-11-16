@@ -23,7 +23,7 @@
 
 import os
 
-from PySide6.QtCore import QFileInfo
+from PySide6.QtCore import QFileInfo, Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QFileIconProvider, QFrame, QPushButton, QVBoxLayout
 
@@ -37,6 +37,8 @@ class ExplorerItem(QFrame):
 
     def __init__(self, item_abs_path: str) -> None:
         super().__init__()
+
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
 
         self.item_abs_path: str = item_abs_path
         self.item_name = str = os.path.basename(os.path.normpath(self.item_abs_path))
