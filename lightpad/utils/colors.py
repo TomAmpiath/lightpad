@@ -121,19 +121,19 @@ def get_color(base_color: BASE_COLOR, shade: SHADE) -> HexColor:
     else:
         raise_exception('Unsupported base color!')
 
-    if shade == SHADE.EXTRA_LIGHT:
+    if shade == SHADE.EXTRA_DARK:
         rgb_color /= 5.0
-    elif shade == SHADE.LIGHTER:
+    elif shade == SHADE.DARKER:
         rgb_color /= 2.22
-    elif shade == SHADE.LIGHT:
+    elif shade == SHADE.DARK:
         rgb_color /= 1.33
     elif shade == SHADE.NORMAL:
         rgb_color *= 1.0
-    elif shade == SHADE.DARK:
+    elif shade == SHADE.LIGHT:
         rgb_color *= 1.25
-    elif shade == SHADE.DARKER:
+    elif shade == SHADE.LIGHTER:
         rgb_color *= 1.55
-    elif shade == SHADE.EXTRA_DARK:
+    elif shade == SHADE.EXTRA_LIGHT:
         rgb_color *= 1.8
     else:
         raise_exception('Unsupported shade!')
