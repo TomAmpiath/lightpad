@@ -25,7 +25,7 @@ import os
 
 from PySide6.QtCore import QFileInfo
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QFileIconProvider, QFrame, QVBoxLayout, QPushButton
+from PySide6.QtWidgets import QFileIconProvider, QFrame, QPushButton, QVBoxLayout
 
 from lightpad.utils.colors import BASE_COLOR, SHADE, get_color
 from lightpad.utils.commons import debug, init_layout
@@ -51,6 +51,5 @@ class ExplorerItem(QFrame):
         item_color: HexColor = (
             get_color(BASE_COLOR.BLUE, SHADE.NORMAL) if self.is_dir else get_color(BASE_COLOR.GREY, SHADE.EXTRA_DARK)
         )
-        print(item_color)
         self.item_button.setStyleSheet('border: None; color: %s;' % (item_color))
         self.layout().addWidget(self.item_button)
