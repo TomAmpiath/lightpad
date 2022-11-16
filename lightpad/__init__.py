@@ -21,18 +21,19 @@
 #  SOFTWARE.
 #
 
-import json
 import os
 import sys
 from traceback import print_exception
 from typing import Dict
+
+import ujson
 
 __version__: str = '0.1'
 
 base_dir: str = os.path.dirname(os.path.relpath(__file__))
 
 with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = json.load(meta_file)
+    meta: Dict = ujson.load(meta_file)
 
 
 # Handle uncaught exceptions
