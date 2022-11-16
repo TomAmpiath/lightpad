@@ -67,7 +67,7 @@ class CodeEditor(PlainTextEditor):
             True if file was successfully opened, else False.
         """
         try:
-            start_time: time.time = time.time()
+            start_time: float = time.time()
 
             content: str = ''
 

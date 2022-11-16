@@ -21,6 +21,9 @@
 #  SOFTWARE.
 #
 
+
+from typing import Union
+
 from PySide6.QtCore import QRect, Qt, Slot
 from PySide6.QtGui import QColor, QPainter, QPaintEvent, QResizeEvent, QTextFormat
 from PySide6.QtWidgets import QPlainTextEdit, QTextEdit
@@ -47,8 +50,8 @@ class PlainTextEditor(QPlainTextEdit):
 
     def line_number_area_width(self) -> int:
         """Returns the width of line number area."""
-        digits = 1
-        max_num = max(1, self.blockCount())
+        digits: int = 1
+        max_num: Union[int, float] = max(1, self.blockCount())
         while max_num >= 10:
             max_num *= 0.1
             digits += 1
