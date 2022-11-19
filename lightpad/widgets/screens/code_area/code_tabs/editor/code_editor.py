@@ -67,7 +67,7 @@ class CodeEditor(PlainTextEditor):
             True if file was successfully opened, else False.
         """
         try:
-            start_time: float = time.time()
+            start_time: float = time.perf_counter()
 
             content: str = ''
 
@@ -75,7 +75,7 @@ class CodeEditor(PlainTextEditor):
                 with open(file_path, 'r') as f:
                     content = f.read()
 
-            debug(f'Took: %.2f seconds to read %s' % (time.time() - start_time, file_path))
+            debug(f'Took: %.2f seconds to read %s' % (time.perf_counter() - start_time, file_path))
 
             self.setPlainText(content)
             self.file_path = file_path
