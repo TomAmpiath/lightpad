@@ -26,6 +26,7 @@ from typing import Dict
 
 from PySide6.QtWidgets import QTabWidget
 
+from lightpad.utils.commons import debug
 from lightpad.widgets.screens.code_area.code_tabs.editor.code_editor import CodeEditor
 
 
@@ -40,10 +41,35 @@ class CodeTabsWidget(QTabWidget):
         self.setTabsClosable(True)
         self.setMovable(True)
 
-        self.tabCloseRequested.connect(self.removeTab)  # type: ignore
+        self.tabCloseRequested.connect(self.handle_tab_close)  # type: ignore
+
+    def handle_tab_close(self, index: int) -> None:
+        """Actions to be performed when a tab is closed.
+
+        Parameters
+        ----------
+        index: int
+            Index of the closed tab.
+
+        Returns
+        -------
+        None
+        """
+        code_editor_instance: CodeEditor = self.widget(index)  # type: ignore
+        file_path: str = list(self._opened_files_dict.keys())[
+            list(self._opened_files_dict.values()).index(code_editor_instance)
+        ]
+        self._opened_files_dict.pop(file_path, None)
+        debug('poping %s from cached file paths' % (file_path))
+        self.removeTab(index)
 
     def open_file(self, file_path: str) -> bool:
         """Create a new code editor tab for the given file.
+
+        Parameters
+        ----------
+        file_path: str
+            Path of file to be opened.
 
         Returns
         -------
@@ -52,6 +78,7 @@ class CodeTabsWidget(QTabWidget):
         """
         status: bool = True
         if file_path in self._opened_files_dict.keys():
+            debug('File path is already present in an opened tab')
             code_editor: CodeEditor = self._opened_files_dict[file_path]
             self.setCurrentWidget(code_editor)
         else:

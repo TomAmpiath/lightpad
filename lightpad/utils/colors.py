@@ -48,8 +48,8 @@ class SHADE(Enum):
 
 class _RGB:
     def __init__(self: _RGB, red: int, green: int, blue: int) -> None:
-        if not 0 <= red <= green <= blue <= 255:
-            raise_exception('Unsupported RGB values')
+        if not all([color in range(0, 256) for color in (red, green, blue)]):
+            raise_exception('Unsupported RGB values', terminate=True)
         self.red = red
         self.green = green
         self.blue = blue
@@ -73,7 +73,7 @@ class _RGB:
 
     def __mul__(self: _RGB, scalar: float) -> _RGB:
         if not 0 <= scalar:
-            raise_exception('Unsupported scalar used for RGB multiplication')
+            raise_exception('Unsupported scalar used for RGB multiplication', terminate=True)
         return _RGB(
             min(int(self.red * scalar), 255),
             min(int(self.green * scalar), 255),
@@ -82,7 +82,7 @@ class _RGB:
 
     def __truediv__(self: _RGB, scalar: float) -> _RGB:
         if not 0 < scalar:
-            raise_exception('Unsupported scalar used for RGB division')
+            raise_exception('Unsupported scalar used for RGB division', terminate=True)
         return _RGB(
             max(int(self.red / scalar), 0),
             max(int(self.green / scalar), 0),
@@ -91,6 +91,72 @@ class _RGB:
 
     def __repr__(self) -> str:
         return f'_RGB(red: {self.red}, green: {self.green}, blue: {self.blue})'
+
+
+def _get_base_color_rgb(base_color: BASE_COLOR) -> _RGB:
+    rgb_color: _RGB = _RGB(0, 0, 0)
+
+    if base_color == BASE_COLOR.GREY:
+        rgb_color = _RGB(127, 127, 127)
+    elif base_color == BASE_COLOR.RED:
+        rgb_color = _RGB(127, 0, 0)
+    elif base_color == BASE_COLOR.GREEN:
+        rgb_color = _RGB(0, 127, 0)
+    elif base_color == BASE_COLOR.BLUE:
+        rgb_color = _RGB(0, 0, 127)
+    else:
+        raise_exception('Unsupported base color!', terminate=True)
+
+    return rgb_color
+
+
+def _get_shaded_color(rgb_color: _RGB, shade: SHADE) -> _RGB:
+    shaded_color: _RGB = _RGB(0, 0, 0)
+
+    if shade == SHADE.EXTRA_DARK:
+        shaded_color = rgb_color / 5.0
+    elif shade == SHADE.DARKER:
+        shaded_color = rgb_color / 2.22
+    elif shade == SHADE.DARK:
+        shaded_color = rgb_color / 1.33
+    elif shade == SHADE.NORMAL:
+        shaded_color = rgb_color * 1.0
+    elif shade == SHADE.LIGHT:
+        shaded_color = rgb_color * 1.25
+    elif shade == SHADE.LIGHTER:
+        shaded_color = rgb_color * 1.55
+    elif shade == SHADE.EXTRA_LIGHT:
+        shaded_color = rgb_color * 1.8
+    else:
+        raise_exception('Unsupported shade!', terminate=True)
+
+    return shaded_color
+
+
+def get_rgb_color(red_shade: SHADE, green_shade: SHADE, blue_shade: SHADE) -> HexColor:
+    """Get color from given shades.
+
+    Parameters
+    ----------
+    red_shade: SHADE
+        Shade of red
+    green_shade: SHADE
+        Shade of green
+    blue_shade: SHADE
+        Shade of blue
+
+    Returns
+    -------
+    rgb_color: HexColor
+        RGB color of given shades.
+    """
+    shaded_red = _get_shaded_color(_get_base_color_rgb(BASE_COLOR.RED), red_shade)
+    shaded_green = _get_shaded_color(_get_base_color_rgb(BASE_COLOR.GREEN), green_shade)
+    shaded_blue = _get_shaded_color(_get_base_color_rgb(BASE_COLOR.BLUE), blue_shade)
+
+    rgb_color: HexColor = (shaded_red + shaded_green + shaded_blue).get_hexcolor()
+
+    return rgb_color
 
 
 def get_color(base_color: BASE_COLOR, shade: SHADE) -> HexColor:
@@ -108,35 +174,8 @@ def get_color(base_color: BASE_COLOR, shade: SHADE) -> HexColor:
     color: HexColor
         HexColor value for the color.
     """
-    rgb_color: _RGB = _RGB(0, 0, 0)
-
-    if base_color == BASE_COLOR.GREY:
-        rgb_color += _RGB(127, 127, 127)
-    elif base_color == BASE_COLOR.RED:
-        rgb_color += _RGB(127, 0, 0)
-    elif base_color == BASE_COLOR.GREEN:
-        rgb_color += _RGB(0, 127, 0)
-    elif base_color == BASE_COLOR.BLUE:
-        rgb_color += _RGB(0, 0, 127)
-    else:
-        raise_exception('Unsupported base color!')
-
-    if shade == SHADE.EXTRA_DARK:
-        rgb_color /= 5.0
-    elif shade == SHADE.DARKER:
-        rgb_color /= 2.22
-    elif shade == SHADE.DARK:
-        rgb_color /= 1.33
-    elif shade == SHADE.NORMAL:
-        rgb_color *= 1.0
-    elif shade == SHADE.LIGHT:
-        rgb_color *= 1.25
-    elif shade == SHADE.LIGHTER:
-        rgb_color *= 1.55
-    elif shade == SHADE.EXTRA_LIGHT:
-        rgb_color *= 1.8
-    else:
-        raise_exception('Unsupported shade!')
+    rgb_color: _RGB = _get_base_color_rgb(base_color)
+    rgb_color = _get_shaded_color(rgb_color, shade)
 
     color: HexColor = rgb_color.get_hexcolor()
     return color

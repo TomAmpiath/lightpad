@@ -21,6 +21,7 @@
 #  SOFTWARE.
 #
 
+import inspect
 import os
 import sys
 from datetime import datetime
@@ -87,6 +88,6 @@ def raise_exception(*args, **kwargs) -> None:
     message_box.setText(message)
     message_box.setIcon(QMessageBox.Critical)  # type: ignore
     message_box.exec()
-    debug(message, debug_type=DebugType.CRITICAL)
+    debug(message, inspect.stack()[2], debug_type=DebugType.CRITICAL)
     if 'terminate' in kwargs and kwargs['terminate']:
         sys.exit(1)
