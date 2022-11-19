@@ -24,7 +24,8 @@
 import os
 import sys
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QPoint, QRect, Qt
+from PySide6.QtGui import QScreen
 from PySide6.QtWidgets import QApplication, QFileDialog
 
 from lightpad import meta
@@ -45,6 +46,12 @@ class Application(QApplication):
 
         self.main_window: MainWindow = MainWindow()
         self.main_window.show()
+
+        # Move main window to center of screen
+        q_rect: QRect = self.main_window.frameGeometry()
+        center_point: QPoint = QScreen.availableGeometry(QApplication.primaryScreen()).center()
+        q_rect.moveCenter(center_point)
+        self.main_window.move(q_rect.topLeft())
 
         self.init_connections()
 
