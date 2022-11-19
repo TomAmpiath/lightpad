@@ -25,14 +25,13 @@ import os
 
 from PySide6.QtCore import QFileInfo, Qt
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import QFileIconProvider, QFrame, QPushButton, QVBoxLayout
+from PySide6.QtWidgets import QFileIconProvider, QPushButton
 
 from lightpad.utils.colors import BASE_COLOR, SHADE, get_color
-from lightpad.utils.commons import init_layout
 from lightpad.utils.custom_typing import HexColor
 
 
-class ExplorerItem(QFrame):
+class ExplorerItem(QPushButton):
     """File or directory item in explorer tree"""
 
     def __init__(self, item_abs_path: str) -> None:
@@ -43,15 +42,24 @@ class ExplorerItem(QFrame):
         self.item_abs_path: str = item_abs_path
         self.item_name = str = os.path.basename(os.path.normpath(self.item_abs_path))
         self._file_icon_provider: QFileIconProvider = QFileIconProvider()
-        self.icon: QIcon = self._file_icon_provider.icon(QFileInfo(self.item_abs_path))
+        self._icon: QIcon = self._file_icon_provider.icon(QFileInfo(self.item_abs_path))
         self.is_dir: bool = os.path.isdir(self.item_abs_path)
 
-        init_layout(self, QVBoxLayout, layout_spacing=2)
-
-        self.item_button: QPushButton = QPushButton(self.item_name)
-        self.item_button.setIcon(self.icon)
+        self.setText(self.item_name)
+        self.setIcon(self._icon)
         item_color: HexColor = (
             get_color(BASE_COLOR.BLUE, SHADE.NORMAL) if self.is_dir else get_color(BASE_COLOR.GREY, SHADE.EXTRA_DARK)
         )
-        self.item_button.setStyleSheet('border: None; color: %s;' % (item_color))
-        self.layout().addWidget(self.item_button)
+        self.setStyleSheet(
+            '''
+            QPushButton {
+                border: None;
+                color: %s;
+            }
+
+            QPushButton:hover {
+                background: %s;
+            }
+            '''
+            % (item_color, get_color(BASE_COLOR.GREY, SHADE.EXTRA_LIGHT))
+        )
