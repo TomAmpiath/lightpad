@@ -24,6 +24,7 @@
 import os
 from typing import Dict
 
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QTabWidget
 
 from lightpad.utils.commons import debug
@@ -32,6 +33,8 @@ from lightpad.widgets.screens.code_area.code_tabs.editor.code_editor import Code
 
 class CodeTabsWidget(QTabWidget):
     """Handles code editor tabs"""
+
+    all_tabs_closed_signal: Signal = Signal()
 
     def __init__(self) -> None:
         super().__init__()
@@ -62,6 +65,9 @@ class CodeTabsWidget(QTabWidget):
         self._opened_files_dict.pop(file_path, None)
         debug('poping %s from cached file paths' % (file_path))
         self.removeTab(index)
+
+        if self.count() == 0:
+            self.all_tabs_closed_signal.emit()
 
     def open_file(self, file_path: str) -> bool:
         """Create a new code editor tab for the given file.

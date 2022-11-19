@@ -24,7 +24,7 @@
 import os
 import sys
 
-from PySide6.QtCore import QPoint, QRect, Qt
+from PySide6.QtCore import QPoint, QRect, Qt, Slot
 from PySide6.QtGui import QScreen
 from PySide6.QtWidgets import QApplication, QFileDialog
 
@@ -63,6 +63,9 @@ class Application(QApplication):
         self.main_window.menu_bar.save_file_action.triggered.connect(self.on_save_file)  # type: ignore
         self.main_window.menu_bar.save_file_as_action.triggered.connect(self.on_save_file_as)  # type: ignore
         self.main_window.menu_bar.exit_action.triggered.connect(self.closeAllWindows)  # type: ignore
+        self.main_window.container_widget.editor_screen.code_area_frame.code_tabs_widget.all_tabs_closed_signal.connect(
+            self.handle_all_tabs_closed
+        )
 
     def _open_file(self, file_path: str) -> None:
         """Open given file in code editor"""
@@ -126,6 +129,12 @@ class Application(QApplication):
         with open(file_path, 'w') as f:
             f.write(file_contents)
         self.main_window.setCursor(Qt.CursorShape.ArrowCursor)
+
+    @Slot()
+    def handle_all_tabs_closed(self) -> None:
+        """Actions to be performed when all code editor tabs have been closed."""
+        self.main_window.menu_bar.save_file_action.setEnabled(False)
+        self.main_window.menu_bar.save_file_as_action.setEnabled(False)
 
 
 def main() -> None:
