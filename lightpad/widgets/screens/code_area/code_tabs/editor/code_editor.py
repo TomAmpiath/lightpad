@@ -24,6 +24,7 @@
 import os
 import time
 
+from PySide6.QtCore import QTimer
 from PySide6.QtGui import QFont, QFontDatabase
 
 from lightpad import base_dir
@@ -38,6 +39,10 @@ class CodeEditor(PlainTextEditor):
         super().__init__()
 
         self.file_path: str = os.path.join(os.path.expanduser('~'), 'unnamed')  # default file path
+        self.content_view: memoryview = memoryview(b'')
+        self.content_index: int = 0
+
+        self.start_time: float = 0.0
 
         font_id: int = QFontDatabase.addApplicationFont(
             os.path.join(
@@ -53,6 +58,18 @@ class CodeEditor(PlainTextEditor):
 
         self.setFont(font)
 
+        self.content_update_timer: QTimer = QTimer()
+        self.content_update_timer.timeout.connect(self.update_content)  # type: ignore
+
+    def update_content(self) -> None:
+        content = self.content_view[self.content_index : self.content_index + 10_000].tobytes().decode('utf-8')
+        if content:
+            self.appendPlainText(content)
+            self.content_index += 10_000
+        else:
+            self.content_update_timer.stop()
+            debug(f'Took: %.2f seconds to read %s' % (time.monotonic() - self.start_time, self.file_path))
+
     def open_file(self, file_path: str) -> bool:
         """Open file for editing.
 
@@ -66,16 +83,16 @@ class CodeEditor(PlainTextEditor):
         status: bool
             True if file was successfully opened, else False.
         """
+        self.start_time = time.monotonic()
         try:
-            start_time: float = time.perf_counter()
-
             content: str = ''
 
             if os.path.isfile(file_path):
-                with open(file_path, 'r') as f:
-                    content = f.read()
-
-            debug(f'Took: %.2f seconds to read %s' % (time.perf_counter() - start_time, file_path))
+                with open(file_path, 'rb') as f:
+                    self.content_view = memoryview(f.read())
+                    content = self.content_view[:10_000].tobytes().decode('utf-8')
+                    self.content_index += 10_000
+                    self.content_update_timer.start(100)
 
             self.setPlainText(content)
             self.file_path = file_path

@@ -44,11 +44,11 @@ def debug(*args, debug_type: Optional[DebugType] = DebugType.INFORMATION) -> Non
             message += str(arg) + ' '
         print(datetime.now(), end='\t')
         if debug_type == DebugType.INFORMATION:
-            print('INFO\t', *args)
+            print('INFO\t', *args, flush=True)
         elif debug_type == DebugType.WARNING:
-            print('WARN\t', *args)
+            print('WARN\t', *args, flush=True)
         else:
-            print('CRIT\t', *args)
+            print('CRIT\t', *args, flush=True)
 
 
 def init_layout(

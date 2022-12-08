@@ -65,6 +65,10 @@ class CodeTabsWidget(QTabWidget):
         self._opened_files_dict.pop(file_path, None)
         debug('poping %s from cached file paths' % (file_path))
         self.removeTab(index)
+        code_editor_instance.content_update_timer.stop()
+        del code_editor_instance.content_view
+        code_editor_instance.clear()
+        del code_editor_instance
 
         if self.count() == 0:
             self.all_tabs_closed_signal.emit()
