@@ -91,3 +91,26 @@ def raise_exception(*args, **kwargs) -> None:
     debug(message, inspect.stack()[2], debug_type=DebugType.CRITICAL)
     if 'terminate' in kwargs and kwargs['terminate']:
         sys.exit(1)
+
+
+def string_width(string_to_modify: str, width: int, show_dots: bool = False) -> str:
+    """Obtain string of fixed width"""
+    string_len: int = len(string_to_modify)
+    abs_width: int = abs(width)
+
+    if width > 0:
+        if string_len > abs_width:
+            return string_to_modify[:abs_width] + '...' if show_dots else string_to_modify[:abs_width]
+        elif string_len < abs_width:
+            return string_to_modify[:string_len] + ' ' * (abs_width - string_len)
+        else:
+            return string_to_modify
+    elif width < 0:
+        if string_len < abs_width:
+            return ' ' * (abs_width - string_len) + string_to_modify
+        elif string_len > abs_width:
+            return '...' + string_to_modify[width:] if show_dots else string_to_modify[width:]
+        else:
+            return string_to_modify
+    else:
+        return string_to_modify

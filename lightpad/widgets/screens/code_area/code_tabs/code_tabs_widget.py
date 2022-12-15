@@ -27,7 +27,7 @@ from typing import Dict
 from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QTabWidget
 
-from lightpad.utils.commons import debug
+from lightpad.utils.commons import debug, string_width
 from lightpad.widgets.screens.code_area.code_tabs.editor.code_editor import CodeEditor
 
 
@@ -96,7 +96,7 @@ class CodeTabsWidget(QTabWidget):
             status = code_editor_instance.open_file(file_path)
             if status:
                 file_name: str = os.path.basename(os.path.normpath(file_path))
-                self.addTab(code_editor_instance, file_name)
+                self.addTab(code_editor_instance, string_width(file_name, -16, True))
                 self.setCurrentWidget(code_editor_instance)
                 self._opened_files_dict[file_path] = code_editor_instance
             else:
