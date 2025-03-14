@@ -21,27 +21,33 @@
 #  SOFTWARE.
 #
 
-import os
-import sys
-from traceback import print_exception
-from typing import Dict
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QSplitter, QVBoxLayout
 
-import ujson
-
-__version__: str = '0.1'
-
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
-
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = ujson.load(meta_file)
+from lightpad.utils.commons import init_layout
+from lightpad.widgets.screens.code_area.code_tabs.code_tabs_widget import CodeTabsWidget
 
 
-# Handle uncaught exceptions
+class CodeAreaFrame(QFrame):
+    """Frame containing code editor and terminal"""
 
+    def __init__(self) -> None:
+        super().__init__()
 
-def _exception_handler(*args, **kwargs):
-    print_exception(*args, **kwargs)
-    sys.exit(1)
+        init_layout(self, QVBoxLayout)
 
+        self._splitter_vertical: QSplitter = QSplitter(Qt.Orientation.Vertical)
 
-sys.excepthook = _exception_handler
+        self.code_tabs_widget: CodeTabsWidget = CodeTabsWidget()
+        # /* TBD --- Terminal Frame
+        # self.terminal_frame = QFrame()
+        # self.terminal_frame.setStyleSheet('background: black;')
+        # */
+
+        self._splitter_vertical.addWidget(self.code_tabs_widget)
+        # self._splitter_vertical.addWidget(self.terminal_frame)
+
+        # self._splitter_vertical.setStretchFactor(0, 8)
+        # self._splitter_vertical.setStretchFactor(1, 2)
+
+        self.layout().addWidget(self._splitter_vertical)

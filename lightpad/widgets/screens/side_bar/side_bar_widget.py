@@ -21,27 +21,18 @@
 #  SOFTWARE.
 #
 
-import os
-import sys
-from traceback import print_exception
-from typing import Dict
+from PySide6.QtWidgets import QFrame, QVBoxLayout
 
-import ujson
-
-__version__: str = '0.1'
-
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
-
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = ujson.load(meta_file)
+from lightpad.utils.commons import init_layout
 
 
-# Handle uncaught exceptions
+class SideBarWidget(QFrame):
+    """A widget for selecting various editor accessories"""
 
+    def __init__(self) -> None:
+        super().__init__()
 
-def _exception_handler(*args, **kwargs):
-    print_exception(*args, **kwargs)
-    sys.exit(1)
+        self.setFixedWidth(50)
+        init_layout(self, QVBoxLayout)
 
-
-sys.excepthook = _exception_handler
+        self.setStyleSheet('background: gray;')

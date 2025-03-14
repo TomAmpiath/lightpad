@@ -21,27 +21,24 @@
 #  SOFTWARE.
 #
 
-import os
-import sys
-from traceback import print_exception
-from typing import Dict
+from PySide6.QtWidgets import QMainWindow
 
-import ujson
-
-__version__: str = '0.1'
-
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
-
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = ujson.load(meta_file)
+from lightpad import meta
+from lightpad.widgets.container_widget import ContainerWidget
+from lightpad.widgets.menu_bar import MenuBar
 
 
-# Handle uncaught exceptions
+class MainWindow(QMainWindow):
+    """Main Window containing all sub widgets"""
 
+    def __init__(self) -> None:
+        super().__init__()
 
-def _exception_handler(*args, **kwargs):
-    print_exception(*args, **kwargs)
-    sys.exit(1)
+        self.setWindowTitle(meta['name'])
+        self.setMinimumSize(800, 600)
 
+        self.menu_bar: MenuBar = MenuBar()
+        self.container_widget: ContainerWidget = ContainerWidget()
 
-sys.excepthook = _exception_handler
+        self.setMenuBar(self.menu_bar)
+        self.setCentralWidget(self.container_widget)

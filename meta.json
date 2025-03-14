@@ -3,5 +3,6 @@
     "description": "An open source lightweight cross-platform text editor",
     "version": 0.1,
     "author": "Tom George Ampiath",
-    "link": "https://github.com/TomAmpiath/lightpad/"
+    "link": "https://github.com/TomAmpiath/lightpad/",
+    "python-min": "3.7"
 }

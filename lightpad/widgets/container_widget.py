@@ -21,27 +21,27 @@
 #  SOFTWARE.
 #
 
-import os
-import sys
-from traceback import print_exception
-from typing import Dict
+from PySide6.QtWidgets import QStackedWidget, QVBoxLayout, QWidget
 
-import ujson
-
-__version__: str = '0.1'
-
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
-
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = ujson.load(meta_file)
+from lightpad.utils.commons import init_layout
+from lightpad.widgets.screens.editor_screen import EditorScreen
+from lightpad.widgets.screens.welcome_screen import WelcomeScreen
 
 
-# Handle uncaught exceptions
+class ContainerWidget(QWidget):
+    """Main Central widget of the application"""
 
+    def __init__(self) -> None:
+        super().__init__()
 
-def _exception_handler(*args, **kwargs):
-    print_exception(*args, **kwargs)
-    sys.exit(1)
+        init_layout(self, QVBoxLayout)
+        self.stacked_container: QStackedWidget = QStackedWidget()
+        self.layout().addWidget(self.stacked_container)
 
+        self.welcome_screen: WelcomeScreen = WelcomeScreen()
+        self.editor_screen: EditorScreen = EditorScreen()
 
-sys.excepthook = _exception_handler
+        self.stacked_container.addWidget(self.welcome_screen)
+        self.stacked_container.addWidget(self.editor_screen)
+
+        self.stacked_container.setCurrentWidget(self.welcome_screen)

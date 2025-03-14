@@ -21,27 +21,31 @@
 #  SOFTWARE.
 #
 
-import os
-import sys
-from traceback import print_exception
-from typing import Dict
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QFrame, QLabel, QVBoxLayout
 
-import ujson
-
-__version__: str = '0.1'
-
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
-
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = ujson.load(meta_file)
+from lightpad import meta
+from lightpad.utils.commons import init_layout
 
 
-# Handle uncaught exceptions
+class WelcomeScreen(QFrame):
+    """This is the screen shown when the app is opened"""
 
+    def __init__(self) -> None:
+        super().__init__()
 
-def _exception_handler(*args, **kwargs):
-    print_exception(*args, **kwargs)
-    sys.exit(1)
+        init_layout(self, QVBoxLayout, layout_spacing=8)
 
+        self.setStyleSheet('background: white; color: black;')
 
-sys.excepthook = _exception_handler
+        self.layout().addWidget(QLabel('Welcome'), alignment=Qt.AlignmentFlag.AlignCenter)  # type: ignore
+        self.layout().addWidget(
+            QLabel(f'{meta["name"]} - version {meta["version"]}'),
+            alignment=Qt.AlignmentFlag.AlignCenter,  # type: ignore
+        )
+        self.layout().addWidget(
+            QLabel(f'{meta["description"]}'), alignment=Qt.AlignmentFlag.AlignCenter
+        )  # type: ignore
+        self.layout().addStretch()  # type: ignore
+
+        self.layout().itemAt(0).widget().setStyleSheet('font-size: 96px;')

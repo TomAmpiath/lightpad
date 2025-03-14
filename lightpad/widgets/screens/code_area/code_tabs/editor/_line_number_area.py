@@ -21,27 +21,21 @@
 #  SOFTWARE.
 #
 
-import os
-import sys
-from traceback import print_exception
-from typing import Dict
-
-import ujson
-
-__version__: str = '0.1'
-
-base_dir: str = os.path.dirname(os.path.relpath(__file__))
-
-with open(os.path.join(base_dir, os.path.pardir, 'meta.json'), 'r') as meta_file:
-    meta: Dict = ujson.load(meta_file)
+from PySide6.QtCore import QSize
+from PySide6.QtGui import QPaintEvent
+from PySide6.QtWidgets import QWidget
 
 
-# Handle uncaught exceptions
+class LineNumberArea(QWidget):
+    """Area inside Plain text editor, showing line number"""
 
+    def __init__(self, plain_text_editor) -> None:
+        QWidget.__init__(self, plain_text_editor)
 
-def _exception_handler(*args, **kwargs):
-    print_exception(*args, **kwargs)
-    sys.exit(1)
+        self._text_editor = plain_text_editor
 
+    def sizeHint(self) -> QSize:
+        return QSize(self._text_editor.line_number_area_width)
 
-sys.excepthook = _exception_handler
+    def paintEvent(self, event: QPaintEvent) -> None:
+        self._text_editor.line_number_area_paint_event(event)
